@@ -1,0 +1,98 @@
+﻿@{
+    ViewData["Title"] = "ViewDaiDoi";
+}
+
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+
+
+
+    <a href="../../index3.html" class="brand-link">
+        <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> <br />
+        <span class="brand-text font-weight-light">HỆ THỐNG QUẢN LÝ QUÂN SỐ</span>
+    </a>
+
+
+
+
+    <div class="sidebar">
+        <!-- Sidebar user (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+
+            <div class="info">
+                <p style="color:green"> Phiên đăng nhập của </p>
+                <div style="color:green">
+                    Võ Quốc Huy<!-- thay thế bằng tên người đăng nhập  -->
+                    <button type="submit" style="background-color: red"> ĐĂNG XUẤT </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- SidebarSearch Form -->
+    <!-- Sidebar Menu -->
+
+
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+
+        <li class="nav-item">
+            <button type="submit" asp-action="linkviewQSDonVi" asp-controller="DaiDoi">
+                <a href="../DaiDoi/linkviewQSDonVi" class="nav-link">
+                    <i class="nav-icon far fa-image"></i>
+                    <p>
+                        DANH SÁCH QUÂN NHÂN
+                    </p>
+                </a>
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <button type="submit" asp-action="linkviewAddInf" asp-controller="DaiDoi" style=" width: 245px ">
+                <a href="../DaiDoi/linkviewAddInf" class="nav-link">
+                    <i class="nav-icon far fa-image"></i>
+                    <p>
+                        THÊM
+                    </p>
+                </a>
+            </button>
+        </li>
+
+
+        <li class="nav-item">
+
+            <button type="submit" asp-action="linkviewForAnalyst" asp-controller="DaiDoi" style=" width: 245px ">
+                <a href="../DaiDoi/linkviewForAnalyst" class="nav-link">
+                    <i class="nav-icon far fa-image"></i>
+                    <p>
+                        THỐNG KÊ
+                    </p>
+                </a>
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <a href="../gallery.html" class="nav-link">
+                <i class="nav-icon far fa-image"></i>
+                <p>
+                    BÁO VẮNG
+                </p>
+            </a>
+        </li>
+        <!-- /.sidebar-menu -->
+
+
+
+    </ul>
+
+</aside>
+
+@{
+    string link = @ViewBag.linkmodel.Link;
+}
+<!-- thay đổi component khi click link  -->
+@await Component.InvokeAsync(link);
+
+
+
+
+
