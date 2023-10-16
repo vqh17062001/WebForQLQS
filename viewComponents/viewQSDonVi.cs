@@ -38,4 +38,17 @@ namespace WebForQLQS.viewComponents
 
 
     }
+
+
+    public class viewBaoCao : ViewComponent
+    {
+        public IViewComponentResult Invoke()
+        {
+
+            return View();
+
+        }
+
+
+    }
 }

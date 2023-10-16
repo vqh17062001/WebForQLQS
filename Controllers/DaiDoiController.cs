@@ -75,5 +75,17 @@ namespace WebForQLQS.Controllers
             return View("ViewDaiDoi");
 
         }
+
+
+
+        public IActionResult linkviewBaoCao()
+        {
+
+            datalinkmodel link = new datalinkmodel("viewBaoCao");
+
+            ViewBag.linkmodel = link;
+            return View("ViewDaiDoi");
+
+        }
     }
 }
