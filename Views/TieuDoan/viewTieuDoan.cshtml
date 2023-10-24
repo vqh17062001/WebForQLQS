@@ -1,13 +1,19 @@
-﻿@{
-    ViewData["Title"] = "ViewDaiDoi";
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
 }
-@{//model IEnumerable<WebForQLQS.Controllers.DaiDoiController>
+@{
+    ViewData["Title"] = "ViewTieuDoan";
 }
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+@{
+    //model IEnumerable<WebForQLQS.Controllers.DaiDoiController>
+}
+<aside class="main-sidebar sidebar-dark-primary ">
 
 
 
-    <a href="/DaiDoi/linkviewQSDonVi" class="brand-link">
+    <a href="/TieuDoan/linkviewQSDonVid" class="brand-link">
         <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> <br />
         <span class="brand-text font-weight-light">HỆ THỐNG QUẢN LÝ QUÂN SỐ</span>
     </a>
@@ -23,9 +29,9 @@
                 <span class="brand-text font-weight-light" style="color:green "> Phiên đăng nhập của </span>
                 <div style="color:green">
                     Võ Quốc Huy    <!-- thay thế bằng tên người đăng nhập  -->
-                    
-                     <a class="btn" href="/Home/Login " style="background-color: red ; width: 130px">ĐĂNG XUẤT </a>
-                    
+
+                    <a class="btn  btn-danger" href="/Home/Login " style="width: 130px">ĐĂNG XUẤT </a>
+
                 </div>
             </div>
         </div>
@@ -38,23 +44,22 @@
 
 
         <li class="nav-item">
-            <button style=" width: 250px ">
-                <a href="../DaiDoi/linkviewQSDonVi" class="btn btn-block btn-primary">
+            <button >
+                <a href="../TieuDoan/linkviewQSDonVid" class="btn btn-block btn-primary">
+                  
+                        DANH SÁCH QUÂN NHÂN TIỂU ĐOÀN
                     
-
-                        DANH SÁCH QUÂN NHÂN
-                   
                 </a>
             </button>
         </li>
 
         <li class="nav-item">
             <button  style=" width: 250px ">
-                <a href="../DaiDoi/linkviewAddInf" class="btn btn-block btn-primary">
-                   
-                   
+                <a href="../TieuDoan/linkviewAddInfd" class="btn btn-block btn-primary ">
+                    
+                    
                         THÊM
-                   
+                    </p>
                 </a>
             </button>
         </li>
@@ -63,11 +68,11 @@
         <li class="nav-item">
 
             <button  style=" width: 250px ">
-                <a href="../DaiDoi/linkviewForAnalyst" class="btn btn-block btn-primary">
+                <a href="../TieuDoan/linkviewForAnalystd" class="btn btn-block btn-primary" >
                     
-                    
+                    <p>
                         THỐNG KÊ
-                   
+                    </p>
                 </a>
             </button>
         </li>
@@ -75,12 +80,12 @@
         <li class="nav-item">
 
             <button  style=" width: 250px ">
-                <a href="../DaiDoi/linkviewBaoCao" class="btn btn-block btn-primary">
-                
-               
-                    BÁO VẮNG
-               
-            </a>
+                <a href="../TieuDoan/linkviewBaoCaod" class="btn btn-block btn-primary">
+                   
+                    <p>
+                        XÁC NHẬN VẮNG
+                    </p>
+                </a>
             </button>
 
         </li>
@@ -94,6 +99,7 @@
 
 @{
     string link = @ViewBag.linkmodel.Link;
+    //var link1 = ViewBag.linkmodel.link as string;
 }
 <!-- thay đổi component khi click link  -->
 @await Component.InvokeAsync(link);

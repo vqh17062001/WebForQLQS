@@ -1,0 +1,91 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+    // trang nay de cho viewQSDonVi
+}
+
+<div class="content-wrapper" style="min-height: 1302.32px;">
+
+    <section class="content">
+
+        <div class="card-header">
+            <h3 class="card-title">Tiêu đề đơn vị (dùng biến để thay đổi)</h3>
+
+            <div class="card-tools">
+                <div class="input-group input-group-sm" style="width: 200px;">
+                    <input type="text" name="table_search" class="form-control float-right" placeholder="Nhập tên quân nhân">
+
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-default">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- /.card-header -->
+
+
+
+        <div class="card-body p-0">
+            <table class="table table-striped"   >
+                <thead>
+                    <tr>
+                       
+
+                        <th style="width: 10px">STT</th>
+                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending"> HỌ TÊN </th>
+                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending"> CHỨC VỤ </th>
+                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending"> ĐƠN VỊ </th>
+
+                        <th style="width: 150px"></th>
+                        <th style="width: 40px"></th>
+                        <th style="width: 40px"></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>num</td>
+                        <td>Full name 1</td>
+                        <td>chuc vụ </td>
+                        <td>rank</td>
+                        <td><button type="button" class="btn btn-block btn-primary" asp-action="baovang" >Báo vắng</button></td>
+                        <td><button type="button" class="btn btn-block btn-primary" asp-action="modify" >sửa</button></td>
+                        <td><button type="button" class="btn btn-block btn-primary" asp-action="delete"  style=" background-color:red" >xóa</button></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>num</td>
+                        <td>Full name 1</td>
+                        <td>chuc vụ </td>
+                        <td>rank</td>
+                        <td><button type="button" class="btn btn-block btn-primary" asp-action="baovang">Báo vắng</button></td>
+                        <td><button type="button" class="btn btn-block btn-primary" asp-action="modify">sửa</button></td>
+                        <td><button type="button" class="btn btn-block btn-primary" asp-action="delete" style=" background-color:red">xóa</button></td>
+                    </tr>
+
+
+                    <tr>
+                        <td>num</td>
+                        <td>Full name 1</td>
+                        <td>chuc vụ </td>
+                        <td>rank</td>
+                        <td><button type="button" class="btn btn-block btn-primary" asp-action="baovang">Báo vắng</button></td>
+                        <td><button type="button" class="btn btn-block btn-primary" asp-action="modify">sửa</button></td>
+                        <td><button type="button" class="btn btn-block btn-primary" asp-action="delete" style=" background-color:red">xóa</button></td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+
+
+    </section>
+</div>
+

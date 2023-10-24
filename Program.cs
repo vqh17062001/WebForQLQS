@@ -29,6 +29,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=DaiDoi}/{action=ViewDaiDoi}/{id?}");
+    pattern: "{controller=TieuDoan}/{action=ViewTieuDoan}/{id?}");
 
 app.Run();

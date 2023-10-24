@@ -21,6 +21,7 @@ namespace WebForQLQS.Controllers
             datalinkmodel link = new datalinkmodel("viewQSDonVi");
 
             ViewBag.linkmodel = link;
+
             return View();
         }
 
