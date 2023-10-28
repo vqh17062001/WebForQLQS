@@ -14,14 +14,16 @@ namespace WebForQLQS.Controllers
     {
         // GET: DaiDoiController
 
-       
+        static  object  ten;
         public IActionResult ViewDaiDoi()
         {
 
             datalinkmodel link = new datalinkmodel("viewQSDonVi");
 
             ViewBag.linkmodel = link;
-
+            ten = TempData["name"];
+            ViewData["name"] = ten;
+            
             return View();
         }
 
@@ -50,6 +52,7 @@ namespace WebForQLQS.Controllers
             datalinkmodel link = new datalinkmodel("viewQSDonVi");
 
             ViewBag.linkmodel = link;
+            ViewData["name"] = ten;
             return View("ViewDaiDoi");
         
         }
@@ -61,6 +64,7 @@ namespace WebForQLQS.Controllers
             datalinkmodel link = new datalinkmodel("viewAddInf");
 
             ViewBag.linkmodel = link;
+            ViewData["name"] = ten;
             return View("ViewDaiDoi");
 
         }
@@ -73,6 +77,7 @@ namespace WebForQLQS.Controllers
             datalinkmodel link = new datalinkmodel("viewForAnalyst");
 
             ViewBag.linkmodel = link;
+            ViewData["name"] = ten;
             return View("ViewDaiDoi");
 
         }
@@ -85,6 +90,7 @@ namespace WebForQLQS.Controllers
             datalinkmodel link = new datalinkmodel("viewBaoCao");
 
             ViewBag.linkmodel = link;
+            ViewData["name"] = ten;
             return View("ViewDaiDoi");
 
         }

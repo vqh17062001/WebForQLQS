@@ -6,22 +6,36 @@
     // trang nay de cho viewQSDonVi
 }
 
-<div class="content-wrapper" style="min-height: 1302.32px;">
+
+
+@model PagedViewModel<WebForQLQS.Models.QuanNhan>;
+<div class="content-wrapper" style="min-height: 30000px;">
 
     <section class="content">
 
         <div class="card-header">
-            <h3 class="card-title">Tiêu đề đơn vị (dùng biến để thay đổi)</h3>
+            <h3 class="card-title">HỌC VIỆN KỸ THUẬT QUÂN SỰ - TIỂU ĐOÀN 1 </h3>
 
-            <div class="card-tools">
-                <div class="input-group input-group-sm" style="width: 200px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Nhập tên quân nhân">
+            <div class="card-tools" style="width: 250px">
+                <div class="input-group input-group-sm" style="width: 300px;">
 
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-default">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
+                    <form method="post" action="table_searchButtonClick">
+
+                        <div class="input-group-append" >
+                            <input type="text" name="table_search" id="table_search" class="form-control float-right" placeholder="Nhập tên quân nhân">
+
+
+
+
+                            <button class="btn btn-default" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+
+
+
+                        </div>
+
+                    </form>
                 </div>
             </div>
         </div>
@@ -31,13 +45,13 @@
 
 
         <div class="card-body p-0">
-            <table class="table table-striped"   >
+            <table class="table table-striped">
                 <thead>
                     <tr>
-                       
+
 
                         <th style="width: 10px">STT</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending"> HỌ TÊN </th>
+                        <th style="width: 150px"> HỌ TÊN </th>
                         <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending"> CHỨC VỤ </th>
                         <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending"> ĐƠN VỊ </th>
 
@@ -48,40 +62,37 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>num</td>
-                        <td>Full name 1</td>
-                        <td>chuc vụ </td>
-                        <td>rank</td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="baovang" >Báo vắng</button></td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="modify" >sửa</button></td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="delete"  style=" background-color:red" >xóa</button></td>
-                    </tr>
-                    
-                    <tr>
-                        <td>num</td>
-                        <td>Full name 1</td>
-                        <td>chuc vụ </td>
-                        <td>rank</td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="baovang">Báo vắng</button></td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="modify">sửa</button></td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="delete" style=" background-color:red">xóa</button></td>
-                    </tr>
 
 
-                    <tr>
-                        <td>num</td>
-                        <td>Full name 1</td>
-                        <td>chuc vụ </td>
-                        <td>rank</td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="baovang">Báo vắng</button></td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="modify">sửa</button></td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="delete" style=" background-color:red">xóa</button></td>
-                    </tr>
+                    @foreach (var quannhan in Model.Items)
+                    {
+                        <tr>
+                            <td>@quannhan.MaQuanNhan</td>
+                            <td>@quannhan.HoTen</td>
+                            <td>@quannhan.ChucVu</td>
+                            <td>@quannhan.DonVi</td>
+                            <td><button type="button" class="btn btn-block btn-primary" asp-action="baovang">Báo vắng</button></td>
+                            <td><button type="button" class="btn btn-block btn-primary" asp-action="modify">sửa</button></td>
+                            <td><button type="button" class="btn btn-block btn-primary" asp-action="delete" style=" background-color:red">xóa</button></td>
+                        </tr>
+                    }
+
 
 
                 </tbody>
             </table>
+
+            <div class="pagination">
+                @for (int i = 1; i <= (Model.TotalItems / Model.PageSize) + 1; i++)
+                {
+
+
+                    <a class="btn" href="@Url.Action("viewTieuDoan", new { page = i })">@i</a>
+                }
+            </div>
+
+
+
         </div>
         <!-- /.card-body -->
 

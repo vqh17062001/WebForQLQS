@@ -21,57 +21,58 @@
                         </button>
                     </div>
                     <div class="line"></div>
-                   
+
                 </div>
                 <div class="bs-stepper-content">
                     <!-- form cho đăng nhập
 
-                        sau khi nhấn nút "đăng nhập " thông tin chuyển đến homecontroller/ LoginButtonClick để xử lý dữ liệu 
+                        sau khi nhấn nút "đăng nhập " thông tin chuyển đến homecontroller/ LoginButtonClick để xử lý dữ liệu
 
                     -->
 
 
                     <form method="post" action="/Home/LoginButtonClick">
-                    <div id="logins-part" class="content active dstepper-block" role="tabpanel" aria-labelledby="logins-part-trigger">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Tên đơn vị</label>
+                        <div id="logins-part" class="content active dstepper-block" role="tabpanel" aria-labelledby="logins-part-trigger">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Tên đơn vị</label>
                                 <input type="text" class="form-control" id="exampleInputEmail1" name="exampleInputEmail1" placeholder="Nhập phiên hiệu đơn vị">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Mật khẩu</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Mật khẩu</label>
                                 <input type="password" class="form-control" id="exampleInputPassword1" name="exampleInputPassword1" placeholder="Mật khẩu">
-                        </div>
+                            </div>
 
-                   
+
                             <button class="btn btn-primary" type="submit">Đăng nhập</button>
-                     </form>
+                        </div>
+                    </form>
 
-                   
 
 
-                    </div>
+
+                </div>
 
                 <!-- form cho đăng nhập-->
-                    <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
-                        <div class="form-group">
-                            <label for="exampleInputFile">File input</label>
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="exampleInputFile">
-                                    <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                </div>
-                                <div class="input-group-append">
-                                    <span class="input-group-text">Upload</span>
-                                </div>
+                <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
+                    <div class="form-group">
+                        <label for="exampleInputFile">File input</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="exampleInputFile">
+                                <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                            </div>
+                            <div class="input-group-append">
+                                <span class="input-group-text">Upload</span>
                             </div>
                         </div>
-                        <button class="btn btn-primary" onclick="stepper.previous()">Previous</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
+                    <button class="btn btn-primary" onclick="stepper.previous()">Previous</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
         </div>
-        
     </div>
-    <!-- /.card -->
+
+</div>
+<!-- /.card -->
 </div>

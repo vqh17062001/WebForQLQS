@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebForQLQS.Models;
 using System.Data.Common;
+using WebForQLQS.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebForQLQS.Controllers
 {
@@ -22,7 +24,7 @@ namespace WebForQLQS.Controllers
             return View();
         }
 
-       
+
 
 
 
@@ -31,7 +33,7 @@ namespace WebForQLQS.Controllers
         // truy vấn từ csdl để đăng nhập 
 
         [HttpPost]
-        public IActionResult LoginButtonClick(string exampleInputEmail1 , string exampleInputPassword1 )
+        public IActionResult LoginButtonClick(string exampleInputEmail1, string exampleInputPassword1)
         {
 
             /*
@@ -53,21 +55,42 @@ namespace WebForQLQS.Controllers
 
             */
 
+            HtqlqsContext context = new HtqlqsContext();
+            var quannhan = context.QuanNhans.ToList();
 
-
-
-            if (exampleInputEmail1 == "123" && exampleInputPassword1 == "123")
+            foreach (var item in quannhan)
             {
+                if (item.DonVi == exampleInputEmail1 && exampleInputPassword1 == item.ChucVu)
+                {
+
+                    if (exampleInputEmail1 == "d1"&& (exampleInputPassword1=="dt"|| exampleInputPassword1 == "pdt"||exampleInputPassword1 == "ctvd"|| exampleInputPassword1 == "ctvpd"))
+                    {
+
+                        TempData["name"] = item.HoTen;
+                        return RedirectToAction("ViewTieuDoan", "TieuDoan");
+                    }
 
 
-                return View("Views/Home/Privacy.cshtml");
+                    else if(exampleInputPassword1=="ct"||exampleInputPassword1=="pct"||exampleInputPassword1=="ctvc"||exampleInputPassword1=="ctvpc"){
+                        TempData["name"] = item.HoTen;
+                        return RedirectToAction("ViewDaiDoi","DaiDoi");
+
+                    }
+
+
+                   
+
+
+                       
+
+
+                }
             }
-            else
-            {
+
+            return View("Views/Home/Login.cshtml");
 
 
-                return View("Views/Home/Login.cshtml");
-            }
+
         }
 
         public IActionResult Privacy()

@@ -1,7 +1,15 @@
 ﻿@{
     ViewData["Title"] = "ViewDaiDoi";
+
+
 }
-@{//model IEnumerable<WebForQLQS.Controllers.DaiDoiController>
+@{
+    //model IEnumerable<WebForQLQS.Controllers.DaiDoiController>
+}
+
+@model String;
+@{
+   
 }
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
@@ -22,8 +30,11 @@
             <div class="info">
                 <span class="brand-text font-weight-light" style="color:green "> Phiên đăng nhập của </span>
                 <div style="color:green">
-                    Võ Quốc Huy    <!-- thay thế bằng tên người đăng nhập  -->
                     
+                     @ViewData["name"]
+                  
+                    <!-- thay thế bằng tên người đăng nhập  -->
+
                      <a class="btn" href="/Home/Login " style="background-color: red ; width: 130px">ĐĂNG XUẤT </a>
                     
                 </div>
