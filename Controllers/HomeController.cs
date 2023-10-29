@@ -66,13 +66,13 @@ namespace WebForQLQS.Controllers
                     if (exampleInputEmail1 == "d1"&& (exampleInputPassword1=="dt"|| exampleInputPassword1 == "pdt"||exampleInputPassword1 == "ctvd"|| exampleInputPassword1 == "ctvpd"))
                     {
 
-                        TempData["name"] = item.HoTen;
+                        TempData["name"] = item.MaQuanNhan;
                         return RedirectToAction("ViewTieuDoan", "TieuDoan");
                     }
 
 
                     else if(exampleInputPassword1=="ct"||exampleInputPassword1=="pct"||exampleInputPassword1=="ctvc"||exampleInputPassword1=="ctvpc"){
-                        TempData["name"] = item.HoTen;
+                        TempData["name"] = item.MaQuanNhan;
                         return RedirectToAction("ViewDaiDoi","DaiDoi");
 
                     }

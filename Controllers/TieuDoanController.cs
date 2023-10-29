@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Drawing.Printing;
 using WebForQLQS.Data;
 using WebForQLQS.Models;
@@ -12,7 +13,7 @@ namespace WebForQLQS.Controllers
 
         private HtqlqsContext _context = new HtqlqsContext();
 
-        static object ten;
+        static string idten;
         static string searchvalue;
         public IActionResult viewTieuDoan(int page = 1)
 
@@ -36,10 +37,10 @@ namespace WebForQLQS.Controllers
 
             datalinkmodel link = new datalinkmodel("viewQSTieuDoan");
 
-            
+
 
             var item = TempData["idsearch"] as string;
-           
+
             if (item != null)
             {
                 searchvalue = item;
@@ -47,11 +48,14 @@ namespace WebForQLQS.Controllers
             }
             List<QuanNhan> pageitemsearch = new List<QuanNhan>();
 
-            if (searchvalue != null) { 
-                foreach (var qn in quannhanlist) {
-                    if (searchvalue == qn.DonVi||searchvalue==qn.HoTen) { 
+            if (searchvalue != null)
+            {
+                foreach (var qn in quannhanlist)
+                {
+                    if (qn.DonVi.Contains(searchvalue) || qn.HoTen.Contains(searchvalue))
+                    {
                         pageitemsearch.Add(qn);
-                    
+
                     }
 
                 }
@@ -64,9 +68,16 @@ namespace WebForQLQS.Controllers
             }
 
             ViewBag.linkmodel = link;
-            ten = TempData["name"];
+            if (TempData["name"] != null)
+            {
 
-            ViewData["name"] = ten;
+                idten = TempData["name"] as string;
+            }
+            
+
+            var ten_nguoi_dangnhap=_context.QuanNhans.Find(idten);
+
+            ViewData["name"] = ten_nguoi_dangnhap.HoTen;
 
             return View(model);
 
@@ -82,7 +93,9 @@ namespace WebForQLQS.Controllers
         {
 
             searchvalue = null;
-            TempData["name"] = ten;
+            var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
+
+            ViewData["name"] = ten_nguoi_dangnhap.HoTen;
             return RedirectToAction("viewTieuDoan", "TieuDoan");
 
         }
@@ -94,7 +107,9 @@ namespace WebForQLQS.Controllers
             datalinkmodel link = new datalinkmodel("viewAddInfd");
 
             ViewBag.linkmodel = link;
-            ViewData["name"] = ten;
+            var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
+
+            ViewData["name"] = ten_nguoi_dangnhap.HoTen;
             return View("ViewTieuDoan");
 
         }
@@ -107,7 +122,9 @@ namespace WebForQLQS.Controllers
             datalinkmodel link = new datalinkmodel("viewForAnalystd");
 
             ViewBag.linkmodel = link;
-            ViewData["name"] = ten;
+            var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
+
+            ViewData["name"] = ten_nguoi_dangnhap.HoTen;
             return View("ViewTieuDoan");
 
         }
@@ -120,7 +137,9 @@ namespace WebForQLQS.Controllers
             datalinkmodel link = new datalinkmodel("viewBaoCaod");
 
             ViewBag.linkmodel = link;
-            ViewData["name"] = ten;
+            var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
+
+            ViewData["name"] = ten_nguoi_dangnhap.HoTen;
             return View("ViewTieuDoan");
 
         }
@@ -134,18 +153,67 @@ namespace WebForQLQS.Controllers
 
         }
 
-       
 
-        
+
+        public IActionResult DeleteQNd(string id)
+        {
+
+            using (var context = new HtqlqsContext()) // Thay YourDbContext bằng tên của DbContext của bạn
+            {
+                var recordToDelete = context.QuanNhans.Find(id);
+                if (recordToDelete != null)
+                {
+                    context.QuanNhans.Remove(recordToDelete);
+                    context.SaveChanges();
+                }
+            }
+
+
+            // var quannhan = _context.QuanNhans.ExecuteDelete(id);
+            return RedirectToAction("viewTieuDoan", "TieuDoan");
+
+        }
+
+
+
+        public IActionResult BaovangQNd(string id)
+        {
+
+            using (var context = new HtqlqsContext())
+            {
+                var recordToAddBCQSNgay = context.QuanNhans.Find(id);
+                var idNguoiduyet = context.QuanNhans.Find(idten);
+
+
+                var recordBaoCao = new BaoCaoQsNgay();
+                recordBaoCao.MaBc = "trust";
+                recordBaoCao.MaQuanNhan = recordToAddBCQSNgay.MaQuanNhan;
+                recordBaoCao.NgayVang = DateTime.Now;
+                recordBaoCao.NguoiDuyet = idNguoiduyet.MaQuanNhan;
+
+
+
+                context.BaoCaoQsNgays.Add(recordBaoCao);
+                context.SaveChanges();
+            }
+
+
+            return RedirectToAction("viewTieuDoan", "TieuDoan");
+
+        }
+
+
+
+
         [HttpPost]
         public IActionResult table_searchButtonClick(string table_search)
         {
 
-           
 
-            
+
+
             TempData["idsearch"] = table_search;
-            return RedirectToAction("viewTieuDoan","TieuDoan");
+            return RedirectToAction("viewTieuDoan", "TieuDoan");
         }
 
 
