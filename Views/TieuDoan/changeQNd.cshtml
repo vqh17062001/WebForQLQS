@@ -2,6 +2,8 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    var chucvu = ViewData["TTChucVu"] as List<ChucVu>;
+    var qncv = ViewData["TT_QNCV"] as string;
 }
 <div style="min-height: 1000px;">
 
@@ -41,11 +43,24 @@
                                 <div class="form-group">
                                     <label for="exampleSelectBorderWidth2">Chức vụ <code></code></label>
                                     <select class="form-control">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
+                                        @foreach (var item in chucvu)
+                                        {
+                                            if (qncv == item.MaChucVu)
+                                            {
+
+                                                <option>@item.TenChucVu</option>
+                                                chucvu.Remove(item);
+                                                break;
+                                            }
+
+                                            
+                                        }
+
+                                        @foreach (var item1 in chucvu)
+                                        {
+                                            <option>@item1.TenChucVu</option>
+
+                                        }
                                     </select>
                                 </div>
                                 <div class="form-group">

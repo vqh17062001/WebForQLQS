@@ -36,27 +36,10 @@ namespace WebForQLQS.Controllers
         public IActionResult LoginButtonClick(string exampleInputEmail1, string exampleInputPassword1)
         {
 
-            /*
-            string connectionString = "Data Source=VO-QUOC-HUY;Initial Catalog=HTQLQS;Persist Security Info=True;User ID=sa;Password=Qnvn16062001@;Encrypt=false;Trusted_Connection=True;TrustServerCertificate=True";
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-            using ( DbConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
+           
 
-                // 3. Tạo một đối tượng SqlCommand để gọi thủ tục lưu trữ
-                using (DbCommand command = connection.CreateCommand())
-                {
-
-
-                    command.CommandText = "SELECT * from QUAN_NHAN";
-                    var reader = command.ExecuteReader();
-                }
-            }
-
-            */
-
-            HtqlqsContext context = new HtqlqsContext();
-            var quannhan = context.NguoiDungs.ToList();
+            HtqlqsContext _context = new HtqlqsContext();
+            var quannhan = _context.NguoiDungs.ToList();
 
             foreach (var item in quannhan)
             {

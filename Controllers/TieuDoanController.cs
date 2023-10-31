@@ -62,7 +62,15 @@ namespace WebForQLQS.Controllers
 
                 {
 
+                    foreach (var qn1 in qn_dvlist) { 
+                    
+                        if (qn1.MaDonVi == searchvalue && qn1.MaQuanNhan==qn.MaQuanNhan )
+                        {
+                            pageitemsearch.Add(qn);
+                        }
 
+                    
+                    }
 
                     if (qn.CapBac.Contains(searchvalue) || qn.HoTen.Contains(searchvalue))
                     {
@@ -160,10 +168,21 @@ namespace WebForQLQS.Controllers
         }
 
 
-        public IActionResult changeinfd()
+        public IActionResult changeQNd(string id)
         {
+            var tt_quannhan = _context.QuanNhans.Find(id);
+            var tt_qncv = _context.QuannhanChucvus.ToList();
+            foreach (var item in tt_qncv) {
+                if (item.MaQuanNhan == tt_quannhan.MaQuanNhan)
+                {
+                    ViewData["TT_QNCV"]=item.MaChucVu;
+                }
+            
+            }
+            var tt_chucvu = _context.ChucVus.ToList();
 
-
+            
+            ViewData["TTChucVu"] = tt_chucvu;
             return View();
 
         }

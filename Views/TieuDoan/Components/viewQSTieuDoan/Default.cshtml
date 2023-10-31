@@ -90,7 +90,7 @@
 
                             }
                             <td><a class=" btn btn-primary" href="@Url.Action("BaovangQNd", new { id = quannhan.MaQuanNhan })">Báo vắng</a></td>
-                            <td><button type="button" class="btn btn-block btn-primary" asp-action="modify">sửa</button></td>
+                            <td><a class=" btn btn-primary" href="@Url.Action("ChangeQNd", new { id = quannhan.MaQuanNhan })">Sửa</a></td>
                             <td><a class=" btn btn-danger" href="@Url.Action("DeleteQNd", new { id = quannhan.MaQuanNhan })">Xóa</a></td>
                         </tr>
                     }
