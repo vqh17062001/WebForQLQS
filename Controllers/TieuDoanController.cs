@@ -15,6 +15,10 @@ namespace WebForQLQS.Controllers
 
         static string idten;
         static string searchvalue;
+
+
+
+
         public IActionResult viewTieuDoan(int page = 1)
 
 
@@ -25,6 +29,9 @@ namespace WebForQLQS.Controllers
 
 
             var quannhanlist = _context.QuanNhans.ToList();
+            var qn_dvlist=_context.QuannhanDonvis.ToList();
+            var qn_cvlist=_context.QuannhanChucvus.ToList();
+
             var pagedItems = quannhanlist.Skip((page - 1) * pageSize).Take(pageSize);
 
             var model = new PagedViewModel<QuanNhan>
@@ -51,8 +58,13 @@ namespace WebForQLQS.Controllers
             if (searchvalue != null)
             {
                 foreach (var qn in quannhanlist)
+
+
                 {
-                    if (qn.DonVi.Contains(searchvalue) || qn.HoTen.Contains(searchvalue))
+
+
+
+                    if (qn.CapBac.Contains(searchvalue) || qn.HoTen.Contains(searchvalue))
                     {
                         pageitemsearch.Add(qn);
 
@@ -78,6 +90,9 @@ namespace WebForQLQS.Controllers
             var ten_nguoi_dangnhap=_context.QuanNhans.Find(idten);
 
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
+
+            ViewData["ttDonVi"] = qn_dvlist;
+            ViewData["ttChucVu"] = qn_cvlist;
 
             return View(model);
 

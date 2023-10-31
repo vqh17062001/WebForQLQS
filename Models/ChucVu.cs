@@ -11,5 +11,5 @@ public partial class ChucVu
 
     public virtual ICollection<LsQsVang> LsQsVangs { get; set; } = new List<LsQsVang>();
 
-    public virtual ICollection<QuanNhan> QuanNhans { get; set; } = new List<QuanNhan>();
+    public virtual ICollection<QuannhanChucvu> QuannhanChucvus { get; set; } = new List<QuannhanChucvu>();
 }

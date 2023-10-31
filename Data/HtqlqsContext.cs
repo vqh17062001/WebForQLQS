@@ -28,13 +28,19 @@ public partial class HtqlqsContext : DbContext
 
     public virtual DbSet<LyDo> LyDos { get; set; }
 
+    public virtual DbSet<NguoiDung> NguoiDungs { get; set; }
+
     public virtual DbSet<QuanNhan> QuanNhans { get; set; }
+
+    public virtual DbSet<QuannhanChucvu> QuannhanChucvus { get; set; }
+
+    public virtual DbSet<QuannhanDonvi> QuannhanDonvis { get; set; }
 
     public virtual DbSet<ThongBaoTrongNgay> ThongBaoTrongNgays { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=VO-QUOC-HUY;Initial Catalog=HTQLQS;Persist Security Info=True;User ID=sa;Password=Qnvn16062001@;Integrated Security=True;Encrypt=false;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Data Source=VO-QUOC-HUY;Initial Catalog=HTQLQS;Integrated Security=True;Encrypt=false;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -42,7 +48,7 @@ public partial class HtqlqsContext : DbContext
         {
             entity.HasKey(e => e.MaBc).HasName("PK__BAO_CAO___2E67755A163092BC");
 
-            entity.ToTable("BAO_CAO_QS_NGAY");
+            entity.ToTable("BAO_CAO_QS_NGAY", tb => tb.HasTrigger("trg_Insert_BaoCao"));
 
             entity.Property(e => e.MaBc)
                 .HasMaxLength(20)
@@ -121,7 +127,7 @@ public partial class HtqlqsContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("Ma_loai");
             entity.Property(e => e.TenLoai)
-                .HasMaxLength(20)
+                .HasMaxLength(50)
                 .HasColumnName("Ten_loai");
         });
 
@@ -129,7 +135,7 @@ public partial class HtqlqsContext : DbContext
         {
             entity.HasKey(e => e.MaLs).HasName("PK__LS_QS_VA__2E62BA62BFDC9C4A");
 
-            entity.ToTable("LS_QS_VANG");
+            entity.ToTable("LS_QS_VANG", tb => tb.HasTrigger("trg_Insert_LS"));
 
             entity.Property(e => e.MaLs)
                 .HasMaxLength(20)
@@ -194,11 +200,44 @@ public partial class HtqlqsContext : DbContext
                 .HasColumnName("Loai_LD");
         });
 
+        modelBuilder.Entity<NguoiDung>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("NGUOI_DUNG");
+
+            entity.Property(e => e.MaChucVu)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("Ma_Chuc_vu");
+            entity.Property(e => e.MaDonVi)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("Ma_Don_vi");
+            entity.Property(e => e.MaQuanNhan)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("Ma_Quan_nhan");
+
+            entity.HasOne(d => d.MaChucVuNavigation).WithMany()
+                .HasForeignKey(d => d.MaChucVu)
+                .HasConstraintName("FK__NGUOI_DUN__Ma_Ch__30C33EC3");
+
+            entity.HasOne(d => d.MaDonViNavigation).WithMany()
+                .HasForeignKey(d => d.MaDonVi)
+                .HasConstraintName("FK__NGUOI_DUN__Ma_Do__2FCF1A8A");
+        });
+
         modelBuilder.Entity<QuanNhan>(entity =>
         {
             entity.HasKey(e => e.MaQuanNhan).HasName("PK__QUAN_NHA__D03D19BE6CA8F11B");
 
-            entity.ToTable("QUAN_NHAN");
+            entity.ToTable("QUAN_NHAN", tb =>
+                {
+                    tb.HasTrigger("TR_DeleteQuanNhan_ChucVu");
+                    tb.HasTrigger("TR_DeleteQuanNhan_DonVi");
+                    tb.HasTrigger("trg_Insert_QuanNhan");
+                });
 
             entity.Property(e => e.MaQuanNhan)
                 .HasMaxLength(20)
@@ -207,14 +246,6 @@ public partial class HtqlqsContext : DbContext
             entity.Property(e => e.CapBac)
                 .HasMaxLength(20)
                 .HasColumnName("Cap_bac");
-            entity.Property(e => e.ChucVu)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("Chuc_vu");
-            entity.Property(e => e.DonVi)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("Don_vi");
             entity.Property(e => e.HoTen)
                 .HasMaxLength(50)
                 .HasColumnName("Ho_ten");
@@ -223,24 +254,78 @@ public partial class HtqlqsContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("Loai_QN");
 
-            entity.HasOne(d => d.ChucVuNavigation).WithMany(p => p.QuanNhans)
-                .HasForeignKey(d => d.ChucVu)
-                .HasConstraintName("FK__QUAN_NHAN__Chuc___60A75C0F");
-
-            entity.HasOne(d => d.DonViNavigation).WithMany(p => p.QuanNhans)
-                .HasForeignKey(d => d.DonVi)
-                .HasConstraintName("FK__QUAN_NHAN__Don_v__619B8048");
-
             entity.HasOne(d => d.LoaiQnNavigation).WithMany(p => p.QuanNhans)
                 .HasForeignKey(d => d.LoaiQn)
                 .HasConstraintName("fkLoaiQN");
+        });
+
+        modelBuilder.Entity<QuannhanChucvu>(entity =>
+        {
+            entity.HasKey(e => new { e.MaQuanNhan, e.MaChucVu }).HasName("PK__QUANNHAN__6EC323E59E6FC3FA");
+
+            entity.ToTable("QUANNHAN_CHUCVU");
+
+            entity.Property(e => e.MaQuanNhan)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("Ma_Quan_nhan");
+            entity.Property(e => e.MaChucVu)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("Ma_Chuc_vu");
+            entity.Property(e => e.NgayBatDau)
+                .HasColumnType("date")
+                .HasColumnName("Ngay_bat_dau");
+            entity.Property(e => e.NgayKetThuc)
+                .HasColumnType("date")
+                .HasColumnName("Ngay_Ket_Thuc");
+
+            entity.HasOne(d => d.MaChucVuNavigation).WithMany(p => p.QuannhanChucvus)
+                .HasForeignKey(d => d.MaChucVu)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__QUANNHAN___Ma_Ch__2A164134");
+
+            entity.HasOne(d => d.MaQuanNhanNavigation).WithMany(p => p.QuannhanChucvus)
+                .HasForeignKey(d => d.MaQuanNhan)
+                .HasConstraintName("FK__QUANNHAN___Ma_Qu__41EDCAC5");
+        });
+
+        modelBuilder.Entity<QuannhanDonvi>(entity =>
+        {
+            entity.HasKey(e => new { e.MaQuanNhan, e.MaDonVi }).HasName("PK__QUANNHAN__A118533BAB1AB626");
+
+            entity.ToTable("QUANNHAN_DONVI");
+
+            entity.Property(e => e.MaQuanNhan)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("Ma_Quan_nhan");
+            entity.Property(e => e.MaDonVi)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("Ma_Don_vi");
+            entity.Property(e => e.NgayBatDau)
+                .HasColumnType("date")
+                .HasColumnName("Ngay_bat_dau");
+            entity.Property(e => e.NgayKetThuc)
+                .HasColumnType("date")
+                .HasColumnName("Ngay_Ket_Thuc");
+
+            entity.HasOne(d => d.MaDonViNavigation).WithMany(p => p.QuannhanDonvis)
+                .HasForeignKey(d => d.MaDonVi)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__QUANNHAN___Ma_Do__2DE6D218");
+
+            entity.HasOne(d => d.MaQuanNhanNavigation).WithMany(p => p.QuannhanDonvis)
+                .HasForeignKey(d => d.MaQuanNhan)
+                .HasConstraintName("FK__QUANNHAN___Ma_Qu__44CA3770");
         });
 
         modelBuilder.Entity<ThongBaoTrongNgay>(entity =>
         {
             entity.HasKey(e => e.MaThongBao).HasName("PK__THONG_BA__1C91EF9BCA2D2A99");
 
-            entity.ToTable("THONG_BAO_TRONG_NGAY");
+            entity.ToTable("THONG_BAO_TRONG_NGAY", tb => tb.HasTrigger("trg_Insert_ThongBao"));
 
             entity.Property(e => e.MaThongBao)
                 .HasMaxLength(20)
@@ -269,6 +354,10 @@ public partial class HtqlqsContext : DbContext
                 .HasForeignKey(d => d.NguoiGui)
                 .HasConstraintName("FK__THONG_BAO__Nguoi__693CA210");
         });
+        modelBuilder.HasSequence<int>("BaoCaoSequence");
+        modelBuilder.HasSequence<int>("LsSequence");
+        modelBuilder.HasSequence<int>("QuanNhanSequence").StartsAt(49L);
+        modelBuilder.HasSequence<int>("ThongBaoSequence");
 
         OnModelCreatingPartial(modelBuilder);
     }

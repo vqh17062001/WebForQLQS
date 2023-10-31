@@ -9,7 +9,7 @@ public partial class DonVi
 
     public string? TenDonVi { get; set; }
 
-    public virtual ICollection<QuanNhan> QuanNhans { get; set; } = new List<QuanNhan>();
+    public virtual ICollection<QuannhanDonvi> QuannhanDonvis { get; set; } = new List<QuannhanDonvi>();
 
     public virtual ICollection<ThongBaoTrongNgay> ThongBaoTrongNgays { get; set; } = new List<ThongBaoTrongNgay>();
 }

@@ -56,11 +56,11 @@ namespace WebForQLQS.Controllers
             */
 
             HtqlqsContext context = new HtqlqsContext();
-            var quannhan = context.QuanNhans.ToList();
+            var quannhan = context.NguoiDungs.ToList();
 
             foreach (var item in quannhan)
             {
-                if (item.DonVi == exampleInputEmail1 && exampleInputPassword1 == item.ChucVu)
+                if (item.MaDonVi == exampleInputEmail1 && exampleInputPassword1 == item.MaChucVu)
                 {
 
                     if (exampleInputEmail1 == "d1"&& (exampleInputPassword1=="dt"|| exampleInputPassword1 == "pdt"||exampleInputPassword1 == "ctvd"|| exampleInputPassword1 == "ctvpd"))
