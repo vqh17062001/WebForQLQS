@@ -14,6 +14,8 @@
     var capbac = ViewData["TT_Capbac"] as string;
 
     var hoten = ViewData["TT_tenQN"] as string;
+
+    var maQN = ViewData["TT_maQN"] as string;
 }
 <div style="min-height: 1000px;">
 
@@ -29,11 +31,11 @@
                         <!-- general form elements -->
                         <div class="card card-primary">
                             <div class="card-header">
-                                <h3 class="card-title">Thông tin quân nhân</h3>
+                                <h3 class="card-title">Thông tin quân nhân @maQN</h3>
                             </div>
                             <!-- /.card-header -->
 
-                            <form>
+                            <form method="post" action="/TieuDoan/changeQNd_buton_click/@maQN">
                                 <div class="card-body">
                                     <h4>Đơn vị</h4>
                                     <div class="form-group">
@@ -116,7 +118,7 @@
                                         </select>
                                     </div>
                                     <div class="card-footer">
-                                        <a class="btn btn-primary">Thay đổi</a>
+                                        <button class="btn btn-primary" type="submit">Thay đổi </button>
                                         <a class="btn btn-primary" href="/TieuDoan/viewTieuDoan">Trở về</a>
                                     </div>
                                 </div>

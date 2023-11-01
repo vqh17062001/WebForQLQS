@@ -217,11 +217,66 @@ namespace WebForQLQS.Controllers
             ///
 
             ViewData["TT_tenQN"] = tt_quannhan.HoTen;
+            ViewData["TT_maQN"] = tt_quannhan.MaQuanNhan;
             return View();
 
         }
 
+        public IActionResult changeQNd_buton_click(string id, string input_tenQN, string input_capbac, string select_chucvu, string select_donvi, string select_loaiQN) {
 
+            var recoreQUANNHAN = _context.QuanNhans.FirstOrDefault(c=>c.MaQuanNhan.Equals(id));
+
+            if (recoreQUANNHAN != null) {
+
+                recoreQUANNHAN.HoTen = input_tenQN;
+                recoreQUANNHAN.CapBac = input_capbac;
+                recoreQUANNHAN.LoaiQn = select_loaiQN;
+                _context.SaveChanges();
+            
+            }
+            ////// xoa bang ghi o QN_DV
+            var recordtodelete = _context.QuannhanDonvis.FirstOrDefault(it => it.MaQuanNhan== id );
+            _context.QuannhanDonvis.Remove(recordtodelete);
+            _context.SaveChanges();
+
+            ////////// thêm vào bảng QN_DV 
+            var recordQUANNHANDONVI = new QuannhanDonvi()
+            {
+                MaDonVi = select_donvi,
+                MaQuanNhan = id,
+                NgayBatDau= DateTime.Now
+            };
+
+            _context.QuannhanDonvis.Add(recordQUANNHANDONVI);
+            _context.SaveChanges();
+
+
+            ////// xoa bang ghi QN_CV
+            ///
+
+            var recordtodelete1 = _context.QuannhanChucvus.FirstOrDefault(it => it.MaQuanNhan == id);
+            _context.QuannhanChucvus.Remove(recordtodelete1);
+            _context.SaveChanges();
+
+
+            //////////// thhêm vào bản QN_CV 
+            var recordQUANNHANCHUCVU = new QuannhanChucvu() { 
+                
+                MaQuanNhan = id,
+                MaChucVu=select_chucvu,
+                NgayBatDau = DateTime.Now   
+                
+            
+            };
+
+            _context.QuannhanChucvus.Add(recordQUANNHANCHUCVU);
+            _context.SaveChanges();
+
+
+
+
+            return RedirectToAction("viewTieuDoan", "TieuDoan");
+        }
 
         public IActionResult DeleteQNd(string id)
         {
