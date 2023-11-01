@@ -4,6 +4,16 @@
 @{
     var chucvu = ViewData["TTChucVu"] as List<ChucVu>;
     var qncv = ViewData["TT_QNCV"] as string;
+
+    var donvi = ViewData["TTDonVi"] as List<DonVi>;
+    var qndv = ViewData["TT_QNDV"] as string;
+
+    var loaiqn = ViewData["TT_LQN"] as List<LoaiQuanNhan>;
+    var qnl = ViewData["QN_L"] as string;
+
+    var capbac = ViewData["TT_Capbac"] as string;
+
+    var hoten = ViewData["TT_tenQN"] as string;
 }
 <div style="min-height: 1000px;">
 
@@ -22,72 +32,100 @@
                                 <h3 class="card-title">Thông tin quân nhân</h3>
                             </div>
                             <!-- /.card-header -->
-                            <div class="card-body">
-                                <h4>Đơn vị</h4>
-                                <div class="form-group">
-                                    <label for="exampleInputBorder">Họ tên quân nhân <code></code></label>
-                                    <input type="text" class="form-control form-control-border" id="exampleInputBorder" placeholder="Họ và tên">
-                                </div>
 
-                                <h4>Thông tin chi tiết</h4>
-                                <div class="form-group">
-                                    <label for="exampleSelectBorder">Cấp bậc <code></code></label>
-                                    <select class="form-control">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleSelectBorderWidth2">Chức vụ <code></code></label>
-                                    <select class="form-control">
-                                        @foreach (var item in chucvu)
-                                        {
-                                            if (qncv == item.MaChucVu)
+                            <form>
+                                <div class="card-body">
+                                    <h4>Đơn vị</h4>
+                                    <div class="form-group">
+                                        <label for="exampleInputBorder">Họ tên quân nhân <code></code></label>
+                                        <input type="text" class="form-control form-control-border" id="input_tenQN" name="input_tenQN" value="@hoten">
+                                    </div>
+
+                                    <h4>Thông tin chi tiết</h4>
+                                    <div class="form-group">
+                                        <label for="exampleSelectBorder">Cấp bậc <code></code></label>
+                                        <input type="text" class="form-control form-control-border" id="input_capbac" name="input_capbac" value="@capbac">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleSelectBorderWidth2">Chức vụ <code></code></label>
+                                        <select class="form-control" id="select_chucvu" name="select_chucvu">
+                                            @foreach (var item in chucvu)
                                             {
+                                                if (qncv == item.MaChucVu)
+                                                {
 
-                                                <option>@item.TenChucVu</option>
-                                                chucvu.Remove(item);
-                                                break;
+                                                    <option value=@item.MaChucVu>@item.TenChucVu</option>
+                                                    chucvu.Remove(item);
+                                                    break;
+                                                }
+
+
                                             }
 
-                                            
-                                        }
+                                            @foreach (var item1 in chucvu)
+                                            {
+                                                <option value=@item1.MaChucVu>@item1.TenChucVu</option>
 
-                                        @foreach (var item1 in chucvu)
-                                        {
-                                            <option>@item1.TenChucVu</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleSelectRounded0">Đơn vị <code></code></label>
+                                        <select class="form-control" id="select_donvi" name="select_donvi">
+                                            @foreach (var item in donvi)
+                                            {
+                                                if (qndv == item.MaDonVi)
+                                                {
 
-                                        }
-                                    </select>
+                                                    <option value=@item.MaDonVi>@item.TenDonVi</option>
+                                                    donvi.Remove(item);
+                                                    break;
+                                                }
+
+
+                                            }
+
+                                            @foreach (var item1 in donvi)
+                                            {
+                                                <option value=@item1.MaDonVi>@item1.TenDonVi</option>
+
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleSelectRounded0">Loại quân nhân <code></code></label>
+                                        <select class="form-control" id="select_loaiQN" name="select_loaiQN">
+                                            @foreach (var item in loaiqn)
+                                            {
+                                                if (qnl == item.MaLoai)
+                                                {
+
+                                                    <option value=@item.MaLoai>@item.TenLoai</option>
+                                                    loaiqn.Remove(item);
+                                                    break;
+                                                }
+
+
+                                            }
+
+                                            @foreach (var item1 in loaiqn)
+                                            {
+                                                <option value=@item1.MaLoai>@item1.TenLoai</option>
+
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a class="btn btn-primary">Thay đổi</a>
+                                        <a class="btn btn-primary" href="/TieuDoan/viewTieuDoan">Trở về</a>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="exampleSelectRounded0">Đơn vị <code></code></label>
-                                    <select class="form-control">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleSelectRounded0">Loại quân nhân <code></code></label>
-                                    <select class="form-control">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
-                                    </select>
-                                </div>
-                                <div class="card-footer">
-                                    <a class="btn btn-primary">Thay đổi</a>
-                                    <a class="btn btn-primary">Trở về</a>
-                                </div>
-                            </div>
+
+                            </form>
+
+
+
+
                         </div>
                     </div>
                 </div>

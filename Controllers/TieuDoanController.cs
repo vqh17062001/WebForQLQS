@@ -171,7 +171,11 @@ namespace WebForQLQS.Controllers
         public IActionResult changeQNd(string id)
         {
             var tt_quannhan = _context.QuanNhans.Find(id);
+
+
+            ///////////// khối truyền thông tin chức vụ 
             var tt_qncv = _context.QuannhanChucvus.ToList();
+
             foreach (var item in tt_qncv) {
                 if (item.MaQuanNhan == tt_quannhan.MaQuanNhan)
                 {
@@ -180,9 +184,39 @@ namespace WebForQLQS.Controllers
             
             }
             var tt_chucvu = _context.ChucVus.ToList();
-
-            
             ViewData["TTChucVu"] = tt_chucvu;
+
+            ///////// khối truyền thông tin đơn vị 
+
+            var tt_qndv = _context.QuannhanDonvis.ToList();
+
+            foreach (var item in tt_qndv)
+            {
+                if (item.MaQuanNhan == tt_quannhan.MaQuanNhan)
+                {
+                    ViewData["TT_QNDV"] = item.MaDonVi;
+                }
+
+            }
+            var tt_donvi = _context.DonVis.ToList();
+            ViewData["TTDonVi"] = tt_donvi;
+
+
+            ///////// khối này truyền thông tin loại quân nhân 
+
+
+            ViewData["QN_L"] = tt_quannhan.LoaiQn;
+            
+            var tt_lqn=_context.LoaiQuanNhans.ToList();
+            ViewData["TT_LQN"] = tt_lqn;
+            //////////// khối này truyền thông tin cấp bậc
+            ///
+            ViewData["TT_Capbac"] = tt_quannhan.CapBac;
+
+            ////// khối này truyền tên quân nhân 
+            ///
+
+            ViewData["TT_tenQN"] = tt_quannhan.HoTen;
             return View();
 
         }
