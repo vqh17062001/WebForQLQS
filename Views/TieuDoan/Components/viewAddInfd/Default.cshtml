@@ -1,8 +1,16 @@
 ﻿@{
     // trang nay de cho viewAddInf
+            //
     //
-    //
-    //
+            //
+}
+
+
+@{
+    var listchuvu = ViewData["TT_ChuVu"] as List<ChucVu>;
+    var listdonvi = ViewData["TT_DonVi"] as List<DonVi>;
+    var listloaiQN = ViewData["TT_LoaiQN"] as List<LoaiQuanNhan>;
+    
 }
 
 <div class="content-wrapper" style="min-height: 1302.32px;">
@@ -11,6 +19,8 @@
         <div class="container-fluid">
             <div class="row">
                 <!-- left column -->
+
+
                 <div class="col-md-6">
                     <!-- general form elements -->
                     <div class="card card-primary">
@@ -23,56 +33,52 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <h4>Đơn vị</h4>
-                                <div class="form-group">
-                                    <label for="exampleInputBorder">Họ tên quân nhân <code></code></label>
-                                    <input type="text" class="form-control form-control-border" id="exampleInputBorder" placeholder="Họ và tên">
-                                </div>
+                                <form method="post" action="/TieuDoan/AddQNd_buton_click">
+                                    <div class="form-group">
+                                        <label for="exampleInputBorder">Họ tên quân nhân <code></code></label>
+                                        <input type="text" class="form-control form-control-border" id="input_tenQN" name="input_tenQN" placeholder="Họ và tên">
+                                    </div>
 
-                                <h4>Thông tin chi tiết</h4>
-                                <div class="form-group">
-                                    <label for="exampleSelectBorder">Cấp bậc <code></code></label>
-                                    <select class="form-control">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleSelectBorderWidth2">Chức vụ <code></code></label>
-                                    <select class="form-control">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleSelectRounded0">Đơn vị <code></code></label>
-                                    <select class="form-control">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleSelectRounded0">Loại quân nhân <code></code></label>
-                                    <select class="form-control">
-                                        <option>option 1</option>
-                                        <option>option 2</option>
-                                        <option>option 3</option>
-                                        <option>option 4</option>
-                                        <option>option 5</option>
-                                    </select>
-                                </div>
-                                <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Thêm</button>
-                                </div>
+                                    <h4>Thông tin chi tiết</h4>
+                                    <div class="form-group">
+                                        <label for="exampleSelectBorder"> Cấp bậc <code></code></label>
+                                        <input type="text" class="form-control form-control-border" id="input_capbac" name="input_capbac" placeholder="Cấp bậc">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleSelectBorderWidth2">Chức vụ <code></code></label>
+                                        <select class="form-control" id="select_chucvu" name="select_chucvu">
+
+                                            @foreach (var item in listchuvu)
+                                            {
+                                                <option value=@item.MaChucVu>@item.TenChucVu</option>
+
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleSelectRounded0">Đơn vị <code></code></label>
+                                        <select class="form-control" id="select_donvi" name="select_donvi">
+                                            @foreach (var item in listdonvi)
+                                            {
+                                                <option value=@item.MaDonVi>@item.TenDonVi</option>
+
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleSelectRounded0">Loại quân nhân <code></code></label>
+                                        <select class="form-control" id="select_loaiQN" name="select_loaiQN">
+                                            @foreach (var item in listloaiQN)
+                                            {
+                                                <option value=@item.MaLoai>@item.TenLoai</option>
+
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="submit" style="width:330px" class="btn btn-primary">Thêm</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -121,6 +127,14 @@
 
 
                 </div>
+
+
+
+            </div>
+
+
+
+        </div>
 
 
 

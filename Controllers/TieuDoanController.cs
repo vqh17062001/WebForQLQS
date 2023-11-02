@@ -29,8 +29,8 @@ namespace WebForQLQS.Controllers
 
 
             var quannhanlist = _context.QuanNhans.ToList();
-            var qn_dvlist=_context.QuannhanDonvis.ToList();
-            var qn_cvlist=_context.QuannhanChucvus.ToList();
+            var qn_dvlist = _context.QuannhanDonvis.ToList();
+            var qn_cvlist = _context.QuannhanChucvus.ToList();
 
             var pagedItems = quannhanlist.Skip((page - 1) * pageSize).Take(pageSize);
 
@@ -62,14 +62,15 @@ namespace WebForQLQS.Controllers
 
                 {
 
-                    foreach (var qn1 in qn_dvlist) { 
-                    
-                        if (qn1.MaDonVi == searchvalue && qn1.MaQuanNhan==qn.MaQuanNhan )
+                    foreach (var qn1 in qn_dvlist)
+                    {
+
+                        if (qn1.MaDonVi == searchvalue && qn1.MaQuanNhan == qn.MaQuanNhan)
                         {
                             pageitemsearch.Add(qn);
                         }
 
-                    
+
                     }
 
                     if (qn.CapBac.Contains(searchvalue) || qn.HoTen.Contains(searchvalue))
@@ -93,9 +94,9 @@ namespace WebForQLQS.Controllers
 
                 idten = TempData["name"] as string;
             }
-            
 
-            var ten_nguoi_dangnhap=_context.QuanNhans.Find(idten);
+
+            var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
 
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
 
@@ -131,11 +132,89 @@ namespace WebForQLQS.Controllers
 
             ViewBag.linkmodel = link;
             var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
-
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
+
+
+            ViewData["TT_ChuVu"] = _context.ChucVus.ToList();
+            ViewData["TT_DonVi"] = _context.DonVis.ToList();
+            ViewData["TT_LoaiQN"] = _context.LoaiQuanNhans.ToList();
             return View("ViewTieuDoan");
 
         }
+
+
+
+        public IActionResult AddQNd_buton_click(string input_tenQN, string input_capbac, string select_chucvu, string select_donvi, string select_loaiQN)
+        {
+
+            var recordtoaddQUANNHAN = new QuanNhan()
+            {
+                MaQuanNhan = "trust",
+                HoTen = input_tenQN,
+                CapBac = input_capbac,
+                LoaiQn = select_loaiQN,
+
+            };
+            _context.QuanNhans.Add(recordtoaddQUANNHAN);
+            _context.SaveChanges();
+
+
+            string maQN = null;
+
+            var temp = _context.QuannhanDonvis.ToList();
+            var temp2 = _context.QuanNhans.ToList();
+
+            foreach (var d in temp2)
+            {
+                foreach (var c in temp)
+                {
+                    if (d.MaQuanNhan == c.MaQuanNhan)
+                    {
+                        maQN = null;
+                        continue;
+                    }
+                    else { maQN = d.MaQuanNhan; }
+                }
+            }
+
+
+
+
+
+
+            var maQN_moithem = _context.QuanNhans.Find(maQN);
+
+
+            var recordtoaddQN_CV = new QuannhanChucvu()
+            {
+                MaQuanNhan = maQN_moithem.MaQuanNhan,
+                MaChucVu = select_chucvu,
+                NgayBatDau = DateTime.Now
+
+            };
+
+            _context.QuannhanChucvus.Add(recordtoaddQN_CV);
+            _context.SaveChanges();
+
+            var recordtoaddQN_DV = new QuannhanDonvi()
+            {
+                MaQuanNhan = maQN_moithem.MaQuanNhan,
+                MaDonVi = select_donvi,
+
+                NgayBatDau = DateTime.Now
+            };
+
+            _context.QuannhanDonvis.Add(recordtoaddQN_DV);
+            _context.SaveChanges();
+
+
+
+
+
+
+            return RedirectToAction("viewTieuDoan", "TieuDoan");
+        }
+
 
 
 
@@ -176,12 +255,13 @@ namespace WebForQLQS.Controllers
             ///////////// khối truyền thông tin chức vụ 
             var tt_qncv = _context.QuannhanChucvus.ToList();
 
-            foreach (var item in tt_qncv) {
+            foreach (var item in tt_qncv)
+            {
                 if (item.MaQuanNhan == tt_quannhan.MaQuanNhan)
                 {
-                    ViewData["TT_QNCV"]=item.MaChucVu;
+                    ViewData["TT_QNCV"] = item.MaChucVu;
                 }
-            
+
             }
             var tt_chucvu = _context.ChucVus.ToList();
             ViewData["TTChucVu"] = tt_chucvu;
@@ -206,8 +286,8 @@ namespace WebForQLQS.Controllers
 
 
             ViewData["QN_L"] = tt_quannhan.LoaiQn;
-            
-            var tt_lqn=_context.LoaiQuanNhans.ToList();
+
+            var tt_lqn = _context.LoaiQuanNhans.ToList();
             ViewData["TT_LQN"] = tt_lqn;
             //////////// khối này truyền thông tin cấp bậc
             ///
@@ -222,20 +302,22 @@ namespace WebForQLQS.Controllers
 
         }
 
-        public IActionResult changeQNd_buton_click(string id, string input_tenQN, string input_capbac, string select_chucvu, string select_donvi, string select_loaiQN) {
+        public IActionResult changeQNd_buton_click(string id, string input_tenQN, string input_capbac, string select_chucvu, string select_donvi, string select_loaiQN)
+        {
 
-            var recoreQUANNHAN = _context.QuanNhans.FirstOrDefault(c=>c.MaQuanNhan.Equals(id));
+            var recoreQUANNHAN = _context.QuanNhans.FirstOrDefault(c => c.MaQuanNhan.Equals(id));
 
-            if (recoreQUANNHAN != null) {
+            if (recoreQUANNHAN != null)
+            {
 
                 recoreQUANNHAN.HoTen = input_tenQN;
                 recoreQUANNHAN.CapBac = input_capbac;
                 recoreQUANNHAN.LoaiQn = select_loaiQN;
                 _context.SaveChanges();
-            
+
             }
             ////// xoa bang ghi o QN_DV
-            var recordtodelete = _context.QuannhanDonvis.FirstOrDefault(it => it.MaQuanNhan== id );
+            var recordtodelete = _context.QuannhanDonvis.FirstOrDefault(it => it.MaQuanNhan == id);
             _context.QuannhanDonvis.Remove(recordtodelete);
             _context.SaveChanges();
 
@@ -244,7 +326,7 @@ namespace WebForQLQS.Controllers
             {
                 MaDonVi = select_donvi,
                 MaQuanNhan = id,
-                NgayBatDau= DateTime.Now
+                NgayBatDau = DateTime.Now
             };
 
             _context.QuannhanDonvis.Add(recordQUANNHANDONVI);
@@ -260,13 +342,14 @@ namespace WebForQLQS.Controllers
 
 
             //////////// thhêm vào bản QN_CV 
-            var recordQUANNHANCHUCVU = new QuannhanChucvu() { 
-                
+            var recordQUANNHANCHUCVU = new QuannhanChucvu()
+            {
+
                 MaQuanNhan = id,
-                MaChucVu=select_chucvu,
-                NgayBatDau = DateTime.Now   
-                
-            
+                MaChucVu = select_chucvu,
+                NgayBatDau = DateTime.Now
+
+
             };
 
             _context.QuannhanChucvus.Add(recordQUANNHANCHUCVU);
@@ -277,6 +360,9 @@ namespace WebForQLQS.Controllers
 
             return RedirectToAction("viewTieuDoan", "TieuDoan");
         }
+
+
+
 
         public IActionResult DeleteQNd(string id)
         {
@@ -291,7 +377,7 @@ namespace WebForQLQS.Controllers
                 }
             }
 
-
+           
             // var quannhan = _context.QuanNhans.ExecuteDelete(id);
             return RedirectToAction("viewTieuDoan", "TieuDoan");
 
