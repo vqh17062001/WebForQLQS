@@ -124,7 +124,10 @@ namespace WebForQLQS.Controllers
 
         }
 
-
+        /// <summary>
+        /// vùng cho phần THÊM
+        /// </summary>
+        /// <returns></returns>
         public IActionResult linkviewAddInfd()
         {
 
@@ -224,7 +227,10 @@ namespace WebForQLQS.Controllers
             
         }
 
-
+        /// <summary>
+        /// vùng cho THỐNG KÊ 
+        /// </summary>
+        /// <returns></returns>
 
 
         public IActionResult linkviewForAnalystd()
@@ -240,22 +246,50 @@ namespace WebForQLQS.Controllers
 
         }
 
+        /// <summary>
+        /// vùng cho XÁT NHẬN VẮNG 
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
 
-
-        public IActionResult linkviewBaoCaod()
+        public IActionResult linkviewBaoCaod( int page =1)
         {
-
             datalinkmodel link = new datalinkmodel("viewBaoCaod");
-
             ViewBag.linkmodel = link;
             var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
-
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
-            return View("ViewTieuDoan");
+
+
+            //////////////
+            ///
+
+            int pageSize = 10;
+
+            var baocaoqsngaylist=_context.BaoCaoQsNgays.ToList();
+
+            var pagedItems = baocaoqsngaylist.Skip((page - 1) * pageSize).Take(pageSize);
+
+            var model = new PagedViewModel<BaoCaoQsNgay>
+            {
+                Items=pagedItems.ToList(),
+                TotalItems=baocaoqsngaylist.Count,
+                CurrentPage=page,
+                PageSize=pageSize
+
+            };
+
+
+            ViewData["TT_ChucVU"]=_context.QuannhanChucvus.ToList();
+            ViewData["TT_DonVi"]=_context.QuannhanDonvis.ToList();
+            return View("ViewTieuDoan", model);
 
         }
 
-
+        /// <summary>
+        /// vùng các chức năng của DANH SÁCH QUÂN NHÂN TIỂU ĐOÀN 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public IActionResult changeQNd(string id)
         {
             var tt_quannhan = _context.QuanNhans.Find(id);

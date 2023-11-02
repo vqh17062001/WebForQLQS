@@ -6,8 +6,14 @@
 
 }
 
+@{
+    var ttchucvu = ViewData["TT_ChucVU"] as List<QuannhanChucvu>;
 
+    var ttdonvi = ViewData["TT_DonVi"] as List<QuannhanDonvi>;
 
+    int y = 1 + (Model.CurrentPage - 1) * 10;
+}
+@model PagedViewModel<WebForQLQS.Models.BaoCaoQsNgay>;
 <div class="content-wrapper" style="min-height: 1302.32px;">
 
     <section class="content">
@@ -45,76 +51,75 @@
 
 
                         <th style="width: 10px">STT</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending"> HỌ TÊN </th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending"> CHỨC VỤ </th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending"> ĐƠN VỊ </th>
-                        <th style="width: 150px"> LÝ DO </th>
+                        <th> HỌ TÊN </th>
+                        <th> CHỨC VỤ </th>
+                        <th> ĐƠN VỊ </th>
+                        <th style="width: 130px"> LÝ DO </th>
 
 
-                        <th style="></th>
+                        <th></th>
                         <th style="width: 40px"></th>
 
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>num</td>
-                        <td>Full name 1</td>
-                        <td>chuc vụ </td>
-                        <td>rank</td>
-                        <td>
-                            <select class="form-control">
-                                <option>option 1</option>
-                                <option>option 2</option>
-                                <option>option 3</option>
-                                <option>option 4</option>
-                                <option>option 5</option>
-                            </select>
-                        </td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="modify">thêm chi tiết</button></td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="delete" style=" background-color:red">xóa</button></td>
-                    </tr>
 
-                    <tr>
-                        <td>num</td>
-                        <td>Full name 1</td>
-                        <td>chuc vụ </td>
-                        <td>rank</td>
-                        <td>
-                            <select class="form-control">
-                                <option>option 1</option>
-                                <option>option 2</option>
-                                <option>option 3</option>
-                                <option>option 4</option>
-                                <option>option 5</option>
-                            </select>
-                        </td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="modify">thêm chi tiết</button></td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="delete" style=" background-color:red">xóa</button></td>
-                    </tr>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>@y</td>
+
+                            <td>@item.MaQuanNhan</td>
+
+                            @foreach (var item2 in ttchucvu)
+                            {
+                                if (item.MaQuanNhan == item2.MaQuanNhan)
+                                {
+                                    <td>@item2.MaChucVu</td>
+
+                                }
 
 
-                    <tr>
-                        <td>num</td>
-                        <td>Full name 1</td>
-                        <td>chuc vụ </td>
-                        <td>rank</td>
-                        <td>
-                            <select class="form-control">
-                                <option>option 1</option>
-                                <option>option 2</option>
-                                <option>option 3</option>
-                                <option>option 4</option>
-                                <option>option 5</option>
-                            </select>
-                        </td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="modify">thêm chi tiết</button></td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="delete" style=" background-color:red">xóa</button></td>
-                    </tr>
+                            }
+
+
+                            @foreach (var item2 in ttdonvi)
+                            {
+                                if (item.MaQuanNhan == item2.MaQuanNhan)
+                                {
+                                    <td>@item2.MaDonVi</td>
+
+                                }
+
+
+                            }
+
+
+                            
+                            <td>@item.LyDo</td>
+                            <td><button type="button" class="btn btn-block btn-primary" asp-action="modify">chi tiết</button></td>
+                            <td><button type="button" class="btn btn-block btn-primary" asp-action="delete" style=" background-color:red">xóa</button></td>
+
+                        </tr>
+                        y++;
+                    }
+
 
 
                 </tbody>
             </table>
+
+
+            <div class="pagination">
+                @for (int i = 1; i <= (Model.TotalItems / Model.PageSize) + 1; i++)
+                {
+
+
+                    <a class="btn-navbar  nav-link " href="@Url.Action("linkviewBaoCaod", new { page = i })">@i</a>
+                }
+            </div>
+
+
         </div>
         <!-- /.card-body -->
 

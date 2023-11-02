@@ -69,7 +69,7 @@ namespace WebForQLQS.Controllers
 
                 }
             }
-
+            ViewData["Errol"] = "Tên đăng nhập hoặc mật khẩu không đúng !";
             return View("Views/Home/Login.cshtml");
 
 
