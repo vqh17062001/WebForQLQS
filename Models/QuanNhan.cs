@@ -19,8 +19,6 @@ public partial class QuanNhan
 
     public virtual LoaiQuanNhan? LoaiQnNavigation { get; set; }
 
-    public virtual ICollection<LsQsVang> LsQsVangs { get; set; } = new List<LsQsVang>();
-
     public virtual ICollection<QuannhanChucvu> QuannhanChucvus { get; set; } = new List<QuannhanChucvu>();
 
     public virtual ICollection<QuannhanDonvi> QuannhanDonvis { get; set; } = new List<QuannhanDonvi>();

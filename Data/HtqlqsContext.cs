@@ -179,10 +179,6 @@ public partial class HtqlqsContext : DbContext
             entity.HasOne(d => d.LyDoNavigation).WithMany(p => p.LsQsVangs)
                 .HasForeignKey(d => d.LyDo)
                 .HasConstraintName("FK__LS_QS_VAN__Ly_do__6E01572D");
-
-            entity.HasOne(d => d.MaQuanNhanNavigation).WithMany(p => p.LsQsVangs)
-                .HasForeignKey(d => d.MaQuanNhan)
-                .HasConstraintName("FK__LS_QS_VAN__Ma_Qu__6EF57B66");
         });
 
         modelBuilder.Entity<LyDo>(entity =>

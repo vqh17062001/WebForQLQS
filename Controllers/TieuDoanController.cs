@@ -147,72 +147,81 @@ namespace WebForQLQS.Controllers
         public IActionResult AddQNd_buton_click(string input_tenQN, string input_capbac, string select_chucvu, string select_donvi, string select_loaiQN)
         {
 
-            var recordtoaddQUANNHAN = new QuanNhan()
+            if (input_tenQN != null)
             {
-                MaQuanNhan = "trust",
-                HoTen = input_tenQN,
-                CapBac = input_capbac,
-                LoaiQn = select_loaiQN,
 
-            };
-            _context.QuanNhans.Add(recordtoaddQUANNHAN);
-            _context.SaveChanges();
-
-
-            string maQN = null;
-
-            var temp = _context.QuannhanDonvis.ToList();
-            var temp2 = _context.QuanNhans.ToList();
-
-            foreach (var d in temp2)
-            {
-                foreach (var c in temp)
+                var recordtoaddQUANNHAN = new QuanNhan()
                 {
-                    if (d.MaQuanNhan == c.MaQuanNhan)
+                    MaQuanNhan = "trust",
+                    HoTen = input_tenQN,
+                    CapBac = input_capbac,
+                    LoaiQn = select_loaiQN,
+
+                };
+                _context.QuanNhans.Add(recordtoaddQUANNHAN);
+                _context.SaveChanges();
+
+
+                string maQN = null;
+
+                var temp = _context.QuannhanDonvis.ToList();
+                var temp2 = _context.QuanNhans.ToList();
+
+                foreach (var d in temp2)
+                {
+                    foreach (var c in temp)
                     {
-                        maQN = null;
-                        continue;
+                        if (d.MaQuanNhan == c.MaQuanNhan)
+                        {
+                            maQN = null;
+                            continue;
+                        }
+                        else { maQN = d.MaQuanNhan; }
                     }
-                    else { maQN = d.MaQuanNhan; }
                 }
+
+
+
+
+
+
+                var maQN_moithem = _context.QuanNhans.Find(maQN);
+
+
+                var recordtoaddQN_CV = new QuannhanChucvu()
+                {
+                    MaQuanNhan = maQN_moithem.MaQuanNhan,
+                    MaChucVu = select_chucvu,
+                    NgayBatDau = DateTime.Now
+
+                };
+
+                _context.QuannhanChucvus.Add(recordtoaddQN_CV);
+                _context.SaveChanges();
+
+                var recordtoaddQN_DV = new QuannhanDonvi()
+                {
+                    MaQuanNhan = maQN_moithem.MaQuanNhan,
+                    MaDonVi = select_donvi,
+
+                    NgayBatDau = DateTime.Now
+                };
+
+                _context.QuannhanDonvis.Add(recordtoaddQN_DV);
+                _context.SaveChanges();
+
+                return RedirectToAction("viewTieuDoan", "TieuDoan");
+            }
+            else {
+
+                return RedirectToAction("viewTieuDoan", "TieuDoan");
+
+
             }
 
 
 
-
-
-
-            var maQN_moithem = _context.QuanNhans.Find(maQN);
-
-
-            var recordtoaddQN_CV = new QuannhanChucvu()
-            {
-                MaQuanNhan = maQN_moithem.MaQuanNhan,
-                MaChucVu = select_chucvu,
-                NgayBatDau = DateTime.Now
-
-            };
-
-            _context.QuannhanChucvus.Add(recordtoaddQN_CV);
-            _context.SaveChanges();
-
-            var recordtoaddQN_DV = new QuannhanDonvi()
-            {
-                MaQuanNhan = maQN_moithem.MaQuanNhan,
-                MaDonVi = select_donvi,
-
-                NgayBatDau = DateTime.Now
-            };
-
-            _context.QuannhanDonvis.Add(recordtoaddQN_DV);
-            _context.SaveChanges();
-
-
-
-
-
-
-            return RedirectToAction("viewTieuDoan", "TieuDoan");
+            
         }
 
 
@@ -377,7 +386,7 @@ namespace WebForQLQS.Controllers
                 }
             }
 
-           
+
             // var quannhan = _context.QuanNhans.ExecuteDelete(id);
             return RedirectToAction("viewTieuDoan", "TieuDoan");
 

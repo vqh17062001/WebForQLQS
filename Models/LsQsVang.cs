@@ -28,6 +28,4 @@ public partial class LsQsVang
     public virtual ChucVu? ChucVuNavigation { get; set; }
 
     public virtual LyDo? LyDoNavigation { get; set; }
-
-    public virtual QuanNhan? MaQuanNhanNavigation { get; set; }
 }
