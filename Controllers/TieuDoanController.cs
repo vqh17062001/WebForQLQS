@@ -215,7 +215,8 @@ namespace WebForQLQS.Controllers
 
                 return RedirectToAction("viewTieuDoan", "TieuDoan");
             }
-            else {
+            else
+            {
 
                 return RedirectToAction("viewTieuDoan", "TieuDoan");
 
@@ -224,7 +225,7 @@ namespace WebForQLQS.Controllers
 
 
 
-            
+
         }
 
         /// <summary>
@@ -252,7 +253,7 @@ namespace WebForQLQS.Controllers
         /// <param name="page"></param>
         /// <returns></returns>
 
-        public IActionResult linkviewBaoCaod( int page =1)
+        public IActionResult linkviewBaoCaod(int page = 1)
         {
             datalinkmodel link = new datalinkmodel("viewBaoCaod");
             ViewBag.linkmodel = link;
@@ -260,30 +261,109 @@ namespace WebForQLQS.Controllers
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
 
 
-            //////////////
+            //////////////  vùng đưa thông tin 
             ///
 
             int pageSize = 10;
 
-            var baocaoqsngaylist=_context.BaoCaoQsNgays.ToList();
+            var baocaoqsngaylist = _context.BaoCaoQsNgays.ToList();
 
             var pagedItems = baocaoqsngaylist.Skip((page - 1) * pageSize).Take(pageSize);
 
             var model = new PagedViewModel<BaoCaoQsNgay>
             {
-                Items=pagedItems.ToList(),
-                TotalItems=baocaoqsngaylist.Count,
-                CurrentPage=page,
-                PageSize=pageSize
+                Items = pagedItems.ToList(),
+                TotalItems = baocaoqsngaylist.Count,
+                CurrentPage = page,
+                PageSize = pageSize
 
             };
+            ////////// vung xử lý tiềm kiếm 
+            ///
+            var item = TempData["idsearch"] as string;
+            if (item != null)
+            {
+                searchvalue = item;
+
+                var quannhanlist = _context.QuanNhans.ToList();
+                foreach (var qn in quannhanlist)
+                {
+                    if (qn.HoTen.Contains(searchvalue))
+                    {
+
+                        searchvalue = qn.MaQuanNhan; break;
+                    }
+
+                }
 
 
-            ViewData["TT_ChucVU"]=_context.QuannhanChucvus.ToList();
-            ViewData["TT_DonVi"]=_context.QuannhanDonvis.ToList();
+            }
+            if (item == "all" || item == "tất cả")
+            {
+                searchvalue = null;
+
+            }
+
+
+            List<BaoCaoQsNgay> pageitemsearch = new List<BaoCaoQsNgay>();
+
+            if (searchvalue != null)
+            {
+
+                foreach (var bc in baocaoqsngaylist)
+                {
+
+                    if (bc.MaBc.Contains(searchvalue) || bc.MaQuanNhan == searchvalue)
+                    {
+
+                        pageitemsearch.Add(bc);
+
+                    }
+
+
+
+                }
+
+
+                pagedItems = pageitemsearch.Skip((page - 1) * pageSize).Take(pageSize);
+
+                model.Items = pagedItems.ToList();
+                model.TotalItems = pageitemsearch.Count;
+                model.CurrentPage = page;
+                model.PageSize = pageSize;
+
+
+
+            }
+            ////////// 
+            ///
+
+            ViewData["TT_ChucVU"] = _context.QuannhanChucvus.ToList();
+            ViewData["TT_DonVi"] = _context.QuannhanDonvis.ToList();
+            ViewData["TT_QuanNhan"] = _context.QuanNhans.ToList();
             return View("ViewTieuDoan", model);
 
         }
+
+        public IActionResult DeleteRecordBaoCao(string id)
+        {
+
+            var recordtodelete = _context.BaoCaoQsNgays.Find(id);
+            if (recordtodelete != null)
+            {
+                _context.BaoCaoQsNgays.Remove(recordtodelete);
+                _context.SaveChanges();
+            }
+
+
+            return RedirectToAction("linkviewBaoCaod", "TieuDoan");
+
+        }
+
+
+
+
+
 
         /// <summary>
         /// vùng các chức năng của DANH SÁCH QUÂN NHÂN TIỂU ĐOÀN 
@@ -468,6 +548,12 @@ namespace WebForQLQS.Controllers
             return RedirectToAction("viewTieuDoan", "TieuDoan");
         }
 
+        public IActionResult table_searchButtonClickinXATNHANVANG(string table_search)
+        {
 
+
+            TempData["idsearch"] = table_search;
+            return RedirectToAction("linkviewBaoCaod", "TieuDoan");
+        }
     }
 }

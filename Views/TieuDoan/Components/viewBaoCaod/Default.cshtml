@@ -5,11 +5,16 @@
     // trang nay cho viewBaoCao
 
 }
+@{
+    DateTime currentDate = DateTime.Now;
+}
 
 @{
     var ttchucvu = ViewData["TT_ChucVU"] as List<QuannhanChucvu>;
 
     var ttdonvi = ViewData["TT_DonVi"] as List<QuannhanDonvi>;
+
+    var ttquannhan = ViewData["TT_QuanNhan"] as List<QuanNhan>;
 
     int y = 1 + (Model.CurrentPage - 1) * 10;
 }
@@ -19,23 +24,35 @@
     <section class="content">
 
         <div class="card-header">
-            <h3 class="card-title">Tiêu đề (ngày báo cáo)</h3>
+            <h3 class="card-title">
+                <div style="color:red ">
+                    Ngày hiện tại là: @currentDate.ToShortDateString()
+                </div>
+            </h3>
 
             <div class="card-tools">
 
                 <div class="input-group input-group-sm" style="width: 400px;">
-                    <div style="width: 150px">
+                    <div style="width: 100px">
 
-                        <button type="button" class="btn btn-block btn-primary" asp-action="submit">BÁO CÁO</button>
+                        <button type="button" class="btn btn-block btn-primary" asp-action="submit">XÁC NHẬN</button>
 
                     </div>
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Nhập tên quân nhân">
 
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-default">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
+                    <form method="post" action="table_searchButtonClickinXATNHANVANG">
+
+                        <div class="input-group-append">
+                            <input type="text" style="width:250px" name="table_search" class="form-control float-right" placeholder="Nhập tên quân nhân hoặc đơn vị">
+
+
+                            <button type="submit" class="btn btn-default">
+                                <i class="fas fa-search"></i>
+                            </button>
+
+                        </div>
+
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -68,8 +85,17 @@
                     {
                         <tr>
                             <td>@y</td>
+                            @foreach (var qn in ttquannhan)
+                            {
 
-                            <td>@item.MaQuanNhan</td>
+                                if (qn.MaQuanNhan == item.MaQuanNhan)
+                                {
+                                    <td>@qn.HoTen</td>
+                                }
+
+                            }
+
+
 
                             @foreach (var item2 in ttchucvu)
                             {
@@ -95,10 +121,19 @@
                             }
 
 
-                            
+
                             <td>@item.LyDo</td>
-                            <td><button type="button" class="btn btn-block btn-primary" asp-action="modify">chi tiết</button></td>
-                            <td><button type="button" class="btn btn-block btn-primary" asp-action="delete" style=" background-color:red">xóa</button></td>
+                            <td><button type="button" class="btn btn-block btn-primary" asp-action="modify">@if (item.LyDo == null)
+                                    {
+                                        <span>thêm chi tiết</span>
+                                    }
+                                    else
+                                    {
+                                        <span>chi tiết</span>
+                                    }
+                                </button>
+                            </td>
+                            <td><a class=" btn btn-danger" href="@Url.Action("DeleteRecordBaoCao", new { id = item.MaBc })">Xóa</a></td>
 
                         </tr>
                         y++;
