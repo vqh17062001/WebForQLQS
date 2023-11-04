@@ -71,11 +71,9 @@
                         <th> HỌ TÊN </th>
                         <th> CHỨC VỤ </th>
                         <th> ĐƠN VỊ </th>
-                        <th style="width: 130px"> LÝ DO </th>
-
-
+                        <th style="width: 150px"> LÝ DO </th>
                         <th></th>
-                        <th style="width: 40px"></th>
+                        <th></th>
 
                     </tr>
                 </thead>
@@ -120,10 +118,22 @@
 
                             }
 
+                            @if (item.LyDo == null)
+                            {
+                                <td class="text-danger">chưa thêm lý do</td>
+                            }
+                            else
+
+                            {
+
+                                <td>@item.LyDo</td>
+                            }
 
 
-                            <td>@item.LyDo</td>
-                            <td><button type="button" class="btn btn-block btn-primary" asp-action="modify">@if (item.LyDo == null)
+
+                            <td>
+                                <a class=" btn btn-primary" href="@Url.Action("detailRecordBaoCao", new { id = item.MaBc })">
+                                    @if (item.LyDo == null)
                                     {
                                         <span>thêm chi tiết</span>
                                     }
@@ -131,7 +141,7 @@
                                     {
                                         <span>chi tiết</span>
                                     }
-                                </button>
+                                </a>
                             </td>
                             <td><a class=" btn btn-danger" href="@Url.Action("DeleteRecordBaoCao", new { id = item.MaBc })">Xóa</a></td>
 

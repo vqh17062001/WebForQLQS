@@ -361,6 +361,15 @@ namespace WebForQLQS.Controllers
         }
 
 
+        public IActionResult detailRecordBaoCao(string id) {
+
+            var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
+
+            ViewData["name"] = ten_nguoi_dangnhap.HoTen;
+            return View();
+        }
+
+
 
 
 
@@ -421,6 +430,8 @@ namespace WebForQLQS.Controllers
 
             ViewData["TT_tenQN"] = tt_quannhan.HoTen;
             ViewData["TT_maQN"] = tt_quannhan.MaQuanNhan;
+            var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
+            ViewData["name"] = ten_nguoi_dangnhap.HoTen;
             return View();
 
         }
