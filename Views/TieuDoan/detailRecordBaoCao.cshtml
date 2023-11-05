@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "detailRecordBaoCao";
 }
 
@@ -90,6 +89,25 @@
 
 </aside>
 
+@{
+    var hoten = ViewData["tenquannhan"] as string;
+
+    var capbac = ViewData["capbacquannhan"] as string;
+
+    var chucvu = ViewData["tenchucvu"] as string;
+
+    var donvi = ViewData["tendonvi"] as string;
+
+    var nguoibao = ViewData["tennguoiduyet"] as string;
+
+    var lydo = ViewData["lydo"] as List<LyDo>;
+
+    var ngayvang = ViewData["ngayvang"];
+
+    var bc = ViewData["maBC"] as BaoCaoQsNgay;
+}
+
+
 
 
 <div class="content-wrapper">
@@ -104,34 +122,75 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                    <div class="form-group">
-                        <label for="exampleInputBorder">Họ tên quân nhân <code></code></label>
-                    </div>
+                <div class="form-group">
+                    <label for="exampleInputBorder">Họ tên: <span style="color:crimson">@hoten</span></label>
+                </div>
 
-                    <h4>Thông tin chi tiết</h4>
-                    <div class="form-group">
-                        <label for="exampleSelectBorder"> Cấp bậc <code></code></label>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleSelectBorderWidth2">Chức vụ <code></code></label>
-                        
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleSelectRounded0">Đơn vị <code></code></label>
-                        
-                    </div>
-                   
-                    <div >
-                        <button type="submit" style="width:330px" class="btn btn-primary">Thêm</button>
-                    </div>
-               
+
+                <div class="form-group">
+                    <label for="exampleSelectBorder"> Cấp bậc: <span style="color:crimson">@capbac</code></label>
+                </div>
+                <div class="form-group">
+                    <label for="exampleSelectBorderWidth2">Chức vụ: <span style="color:crimson">@chucvu</span></label>
+
+                </div>
+                <div class="form-group">
+                    <label for="exampleSelectRounded0">Đơn vị: <span style="color:crimson">@donvi</span></label>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleSelectRounded0">Người báo vắng: <span style="color:crimson">@nguoibao</span></label>
+
+                </div>
+
+                <div>
+                    <label for="exampleSelectRounded0">Ngày vắng: <span style="color:lightgreen">@ngayvang</span></label>
+
+
+                </div>
+
             </div>
 
-            <div style="position: absolute; margin-left:400px; margin-top:50px">
-                regregsdfgsdgfdsgsfdgsdfsjhdsfvbhufkbvlsfhdbvlsfbdhl
+            <div style="position: absolute; margin-left:400px; margin-top:65px">
+                <form method="post" action="/TieuDoan/ThemchitietBaoCao/@bc.MaBc">
+                <label>
+                    Lý do
+                    <span>
+                        <select class="form-control" name="select_lydo" id="select_lydo">
 
-                <input type="text" class="form-control form-control-border" />
-            
+                            
+                            @foreach (var item in lydo)
+                            {
+                                if (bc.LyDo == item.MaLd)
+                                {
+
+                                    <option value=@item.MaLd>@item.LoaiLd</option>
+                                    lydo.Remove(item);
+                                    break;
+                                }
+
+
+                            }
+
+                            @foreach (var item1 in lydo)
+                            {
+                                <option value=@item1.MaLd>@item1.LoaiLd</option>
+
+                            }
+
+                        </select>
+                    </span>
+                </label><br />
+
+                <label>Chi tiết</label>
+                    <textarea name="textarea_chitiet" id="textarea_chitiet" value="@bc.ChiTiet" type="text" style="width:450px;border:revert" class="form-control form-control-border" rows="4"> @bc.ChiTiet </textarea>
+
+                <button class=" btn btn-primary" type="submit">Thêm chi tiết </button>
+                <a class=" btn btn-danger" href="@Url.Action("linkviewBaoCaod")">Trở lại</a>
+
+                </form>
+
             </div>
 
 

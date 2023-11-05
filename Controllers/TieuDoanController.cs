@@ -366,9 +366,92 @@ namespace WebForQLQS.Controllers
             var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
 
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
+
+            var ttrecordvang = _context.BaoCaoQsNgays.Find(id);
+           
+            var ttQuanNhan = _context.QuanNhans.ToList();
+            //////// ho ten
+            foreach (var qn in ttQuanNhan) {
+
+                if (qn.MaQuanNhan == ttrecordvang.MaQuanNhan) {
+                    ViewData["tenquannhan"] = qn.HoTen;
+                } 
+            }
+            ///////  cap bac
+            foreach (var qn in ttQuanNhan)
+            {
+
+                if (qn.MaQuanNhan == ttrecordvang.MaQuanNhan)
+                {
+                    ViewData["capbacquannhan"] = qn.CapBac;
+                }
+            }
+            ///////  chuc vu
+          
+            var listQN_CV=_context.QuannhanChucvus.ToList();
+
+            foreach (var qncv in listQN_CV) {
+
+                if (qncv.MaQuanNhan == ttrecordvang.MaQuanNhan) {
+
+                    var chucvu = _context.ChucVus.Find(qncv.MaChucVu);
+                    ViewData["tenchucvu"]= chucvu.TenChucVu;
+                
+                } 
+            
+            }
+
+            ///////  don vi
+
+            var listQN_DV = _context.QuannhanDonvis.ToList();
+
+            foreach (var qndv in listQN_DV)
+            {
+
+                if (qndv.MaQuanNhan == ttrecordvang.MaQuanNhan)
+                {
+
+                    var donvi = _context.DonVis.Find(qndv.MaDonVi);
+                    ViewData["tendonvi"] = donvi.TenDonVi;
+
+                }
+
+            }
+
+
+            ///////  nguoi bao
+            foreach (var qn in ttQuanNhan)
+            {
+
+                if (qn.MaQuanNhan == ttrecordvang.NguoiDuyet)
+                {
+                    ViewData["tennguoiduyet"] = qn.HoTen;
+                }
+            }
+            /////// ly do
+
+            ViewData["lydo"]=_context.LyDos.ToList();
+
+            ///////
+            ///
+            ViewData["ngayvang"] = ttrecordvang.NgayVang;
+            ViewData["maBC"] = ttrecordvang;
             return View();
         }
 
+
+        public IActionResult ThemchitietBaoCao(string id, string select_lydo, string textarea_chitiet) {
+
+            var record= _context.BaoCaoQsNgays.Find(id);
+            if (record != null) { 
+            record.LyDo = select_lydo;
+            record.ChiTiet= textarea_chitiet;
+            _context.SaveChanges();
+
+                return RedirectToAction("linkviewBaoCaod", "TieuDoan");
+            }
+            return View();
+        }
 
 
 
