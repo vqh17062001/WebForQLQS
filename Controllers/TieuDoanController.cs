@@ -103,6 +103,7 @@ namespace WebForQLQS.Controllers
             ViewData["ttDonVi"] = qn_dvlist;
             ViewData["ttChucVu"] = qn_cvlist;
 
+
             return View(model);
 
         }
@@ -341,6 +342,7 @@ namespace WebForQLQS.Controllers
             ViewData["TT_ChucVU"] = _context.QuannhanChucvus.ToList();
             ViewData["TT_DonVi"] = _context.QuannhanDonvis.ToList();
             ViewData["TT_QuanNhan"] = _context.QuanNhans.ToList();
+            ViewData["TT_Lydo"]= _context.LyDos.ToList  ();
             return View("ViewTieuDoan", model);
 
         }
@@ -443,14 +445,14 @@ namespace WebForQLQS.Controllers
         public IActionResult ThemchitietBaoCao(string id, string select_lydo, string textarea_chitiet) {
 
             var record= _context.BaoCaoQsNgays.Find(id);
-            if (record != null) { 
+            if (record != null&& select_lydo!= null) { 
             record.LyDo = select_lydo;
             record.ChiTiet= textarea_chitiet;
             _context.SaveChanges();
 
                 return RedirectToAction("linkviewBaoCaod", "TieuDoan");
             }
-            return View();
+            return RedirectToAction("linkviewBaoCaod", "TieuDoan");
         }
 
 

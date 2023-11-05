@@ -16,6 +16,8 @@
 
     var ttquannhan = ViewData["TT_QuanNhan"] as List<QuanNhan>;
 
+    var lydo = ViewData["TT_Lydo"] as List<LyDo>;
+
     int y = 1 + (Model.CurrentPage - 1) * 10;
 }
 @model PagedViewModel<WebForQLQS.Models.BaoCaoQsNgay>;
@@ -26,7 +28,7 @@
         <div class="card-header">
             <h3 class="card-title">
                 <div style="color:red ">
-                    Ngày hiện tại là: @currentDate.ToShortDateString()
+                    Ngày hiện tại là: @currentDate.ToShortDateString() 
                 </div>
             </h3>
 
@@ -35,7 +37,7 @@
                 <div class="input-group input-group-sm" style="width: 400px;">
                     <div style="width: 100px">
 
-                        <button type="button" class="btn btn-block btn-primary" asp-action="submit">XÁC NHẬN</button>
+                        <button type="button" class="btn btn-block btn-primary" asp-action="submit">XÁC NHẬN </button>
 
                     </div>
 
@@ -72,8 +74,8 @@
                         <th> CHỨC VỤ </th>
                         <th> ĐƠN VỊ </th>
                         <th style="width: 150px"> LÝ DO </th>
-                        <th></th>
-                        <th></th>
+                        <th> </th>
+                        <th>Trang: @Model.CurrentPage/@(Model.TotalItems / Model.PageSize + 1)</th>
 
                     </tr>
                 </thead>
@@ -124,9 +126,17 @@
                             }
                             else
 
-                            {
+                            {    
+                                foreach(var x in lydo)
+                                {
+                                    if (item.LyDo == x.MaLd)
+                                    {
+                                        <td>@x.LoaiLd</td>
+                                        break;
+                                    }
+                                }
 
-                                <td>@item.LyDo</td>
+                                
                             }
 
 

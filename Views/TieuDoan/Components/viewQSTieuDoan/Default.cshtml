@@ -4,6 +4,7 @@
 @{
     var donvi = ViewData["ttDonVi"] as List<QuannhanDonvi>;
     var chucvu = ViewData["ttChucVu"] as List<QuannhanChucvu>;
+
     // trang nay de cho viewQSDonVi
 }
 
@@ -56,7 +57,7 @@
                         <th style="width: 100px"> CHỨC VỤ </th>
                         <th style="width: 100px"> ĐƠN VỊ </th>
 
-                        <th style="width: 120px"> <div style="color:lightgreen" id="real-time-clock"></div> </th>
+                        <th style="width: 130px"> <div style="color:lightgreen" id="real-time-clock"></div> </th>
                         <th style="width: 40px">Trang </th>
                         <th style="width: 40px"> @Model.CurrentPage/@(Model.TotalItems / Model.PageSize + 1)</th>
 
