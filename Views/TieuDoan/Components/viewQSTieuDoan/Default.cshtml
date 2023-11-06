@@ -23,7 +23,7 @@
 
                     <form method="post" action="table_searchButtonClick">
 
-                        <div class="input-group-append" >
+                        <div class="input-group-append">
                             <input type="text" name="table_search" id="table_search" class="form-control float-right" placeholder="tên, cấp bậc hoặc đơn vị ">
 
 
@@ -47,7 +47,9 @@
 
 
         <div class="card-body p-0">
-            <table class="table table-striped">\
+            <table class="table table-striped">
+
+                <h4 class="text-danger"> @ViewData["mess"] </h4>
                 <thead>
                     <tr>
 
@@ -72,12 +74,12 @@
                             <td>@quannhan.MaQuanNhan</td>
                             <td>@quannhan.HoTen</td>
 
-                            @foreach(var item in chucvu)
+                            @foreach (var item in chucvu)
                             {
                                 if (item.MaQuanNhan == quannhan.MaQuanNhan)
                                 {
                                     <td>@item.MaChucVu</td>
-                                }    
+                                }
 
                             }
 

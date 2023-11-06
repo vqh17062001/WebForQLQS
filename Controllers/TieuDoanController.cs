@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing.Printing;
+using System.Linq;
 using WebForQLQS.Data;
 using WebForQLQS.Models;
 
@@ -102,7 +103,7 @@ namespace WebForQLQS.Controllers
 
             ViewData["ttDonVi"] = qn_dvlist;
             ViewData["ttChucVu"] = qn_cvlist;
-
+            ViewData["mess"] = TempData["mess"];
 
             return View(model);
 
@@ -213,12 +214,12 @@ namespace WebForQLQS.Controllers
 
                 _context.QuannhanDonvis.Add(recordtoaddQN_DV);
                 _context.SaveChanges();
-
+                TempData["mess"] = $"Đã thêm quân nhân {input_tenQN} thành công!";
                 return RedirectToAction("viewTieuDoan", "TieuDoan");
             }
             else
             {
-
+                TempData["mess"] = "Thêm thông tin thất bại!";
                 return RedirectToAction("viewTieuDoan", "TieuDoan");
 
 
@@ -343,6 +344,8 @@ namespace WebForQLQS.Controllers
             ViewData["TT_DonVi"] = _context.QuannhanDonvis.ToList();
             ViewData["TT_QuanNhan"] = _context.QuanNhans.ToList();
             ViewData["TT_Lydo"] = _context.LyDos.ToList();
+            ViewData["mess"] = TempData["mess"];
+
             return View("ViewTieuDoan", model);
 
         }
@@ -456,7 +459,7 @@ namespace WebForQLQS.Controllers
                 record.LyDo = select_lydo;
                 record.ChiTiet = textarea_chitiet;
                 _context.SaveChanges();
-
+                TempData["mess"] = "Thêm chi tiết thành công!";
                 return RedirectToAction("linkviewBaoCaod", "TieuDoan");
             }
             return RedirectToAction("linkviewBaoCaod", "TieuDoan");
@@ -532,7 +535,7 @@ namespace WebForQLQS.Controllers
 
 
             }
-
+            TempData["mess"] = $"Đã xát nhận vắng cho {record_to_history.Count} quân nhân!";
             return RedirectToAction("linkviewBaoCaod", "TieuDoan");
         }
 
@@ -604,13 +607,19 @@ namespace WebForQLQS.Controllers
 
             var recoreQUANNHAN = _context.QuanNhans.FirstOrDefault(c => c.MaQuanNhan.Equals(id));
 
-            if (recoreQUANNHAN != null)
+            if (recoreQUANNHAN != null && input_tenQN != null)
             {
 
                 recoreQUANNHAN.HoTen = input_tenQN;
                 recoreQUANNHAN.CapBac = input_capbac;
                 recoreQUANNHAN.LoaiQn = select_loaiQN;
                 _context.SaveChanges();
+
+            }
+            else
+            {
+                TempData["mess"] = "Sửa thất bại!";
+                return RedirectToAction("viewTieuDoan", "TieuDoan");
 
             }
             ////// xoa bang ghi o QN_DV
@@ -654,7 +663,7 @@ namespace WebForQLQS.Controllers
 
 
 
-
+            TempData["mess"] = "Sửa thành công!";
             return RedirectToAction("viewTieuDoan", "TieuDoan");
         }
 
@@ -669,8 +678,16 @@ namespace WebForQLQS.Controllers
                 var recordToDelete = context.QuanNhans.Find(id);
                 if (recordToDelete != null)
                 {
-                    context.QuanNhans.Remove(recordToDelete);
-                    context.SaveChanges();
+
+                    try
+                    {
+                        context.QuanNhans.Remove(recordToDelete);
+                        context.SaveChanges();
+                    }catch (Exception ex)
+                    {
+                        TempData["mess"] = "Quân nhân đang trong danh sách báo vắng!";
+                        return RedirectToAction("viewTieuDoan", "TieuDoan");
+                    }
                 }
             }
 
@@ -684,20 +701,34 @@ namespace WebForQLQS.Controllers
 
         public IActionResult BaovangQNd(string id)
         {
-
+            //var bcqsngay=_context.BaoCaoQsNgays.ToList();
             using (var context = new HtqlqsContext())
             {
+                var bcqsngay = context.BaoCaoQsNgays.ToList();
                 var recordToAddBCQSNgay = context.QuanNhans.Find(id);
                 var idNguoiduyet = context.QuanNhans.Find(idten);
 
 
                 var recordBaoCao = new BaoCaoQsNgay();
+
+
                 recordBaoCao.MaBc = "trust";
                 recordBaoCao.MaQuanNhan = recordToAddBCQSNgay.MaQuanNhan;
-                recordBaoCao.NgayVang = DateTime.Now;
+                recordBaoCao.NgayVang = DateTime.Now.Date;
                 recordBaoCao.NguoiDuyet = idNguoiduyet.MaQuanNhan;
 
+                foreach (var record in bcqsngay)
+                {
 
+                    if (record.MaQuanNhan == recordBaoCao.MaQuanNhan && record.NgayVang == recordBaoCao.NgayVang)
+                    {
+
+                        TempData["mess"] = "Quân nhân đã được báo vắng trong ngày!";
+                        return RedirectToAction("viewTieuDoan", "TieuDoan");
+
+                    }
+
+                }
 
                 context.BaoCaoQsNgays.Add(recordBaoCao);
                 context.SaveChanges();
