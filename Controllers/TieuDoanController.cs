@@ -342,7 +342,7 @@ namespace WebForQLQS.Controllers
             ViewData["TT_ChucVU"] = _context.QuannhanChucvus.ToList();
             ViewData["TT_DonVi"] = _context.QuannhanDonvis.ToList();
             ViewData["TT_QuanNhan"] = _context.QuanNhans.ToList();
-            ViewData["TT_Lydo"]= _context.LyDos.ToList  ();
+            ViewData["TT_Lydo"] = _context.LyDos.ToList();
             return View("ViewTieuDoan", model);
 
         }
@@ -363,21 +363,24 @@ namespace WebForQLQS.Controllers
         }
 
 
-        public IActionResult detailRecordBaoCao(string id) {
+        public IActionResult detailRecordBaoCao(string id)
+        {
 
             var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
 
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
 
             var ttrecordvang = _context.BaoCaoQsNgays.Find(id);
-           
+
             var ttQuanNhan = _context.QuanNhans.ToList();
             //////// ho ten
-            foreach (var qn in ttQuanNhan) {
+            foreach (var qn in ttQuanNhan)
+            {
 
-                if (qn.MaQuanNhan == ttrecordvang.MaQuanNhan) {
+                if (qn.MaQuanNhan == ttrecordvang.MaQuanNhan)
+                {
                     ViewData["tenquannhan"] = qn.HoTen;
-                } 
+                }
             }
             ///////  cap bac
             foreach (var qn in ttQuanNhan)
@@ -389,18 +392,20 @@ namespace WebForQLQS.Controllers
                 }
             }
             ///////  chuc vu
-          
-            var listQN_CV=_context.QuannhanChucvus.ToList();
 
-            foreach (var qncv in listQN_CV) {
+            var listQN_CV = _context.QuannhanChucvus.ToList();
 
-                if (qncv.MaQuanNhan == ttrecordvang.MaQuanNhan) {
+            foreach (var qncv in listQN_CV)
+            {
+
+                if (qncv.MaQuanNhan == ttrecordvang.MaQuanNhan)
+                {
 
                     var chucvu = _context.ChucVus.Find(qncv.MaChucVu);
-                    ViewData["tenchucvu"]= chucvu.TenChucVu;
-                
-                } 
-            
+                    ViewData["tenchucvu"] = chucvu.TenChucVu;
+
+                }
+
             }
 
             ///////  don vi
@@ -432,7 +437,7 @@ namespace WebForQLQS.Controllers
             }
             /////// ly do
 
-            ViewData["lydo"]=_context.LyDos.ToList();
+            ViewData["lydo"] = _context.LyDos.ToList();
 
             ///////
             ///
@@ -442,13 +447,15 @@ namespace WebForQLQS.Controllers
         }
 
 
-        public IActionResult ThemchitietBaoCao(string id, string select_lydo, string textarea_chitiet) {
+        public IActionResult ThemchitietBaoCao(string id, string select_lydo, string textarea_chitiet)
+        {
 
-            var record= _context.BaoCaoQsNgays.Find(id);
-            if (record != null&& select_lydo!= null) { 
-            record.LyDo = select_lydo;
-            record.ChiTiet= textarea_chitiet;
-            _context.SaveChanges();
+            var record = _context.BaoCaoQsNgays.Find(id);
+            if (record != null && select_lydo != null)
+            {
+                record.LyDo = select_lydo;
+                record.ChiTiet = textarea_chitiet;
+                _context.SaveChanges();
 
                 return RedirectToAction("linkviewBaoCaod", "TieuDoan");
             }
@@ -456,7 +463,78 @@ namespace WebForQLQS.Controllers
         }
 
 
+        public IActionResult confirm_btn_click()
+        {
+            var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
 
+            var record_to_history = _context.BaoCaoQsNgays.Where(x => x.LyDo != null).ToList();
+
+
+            var tt_QN_CV = _context.QuannhanChucvus.ToList();
+            var tt_QN_DV = _context.QuannhanDonvis.ToList();
+            var ten_DVlist = _context.DonVis.ToList();
+
+            var history = new LsQsVang();
+
+            if (record_to_history != null)
+            {
+                foreach (var item in record_to_history)
+                {
+
+
+                    foreach (var chuvu in tt_QN_CV)
+                    {
+                        if (item.MaQuanNhan == chuvu.MaQuanNhan)
+                        {
+
+                            history.ChucVu = chuvu.MaChucVu;
+                            break;
+                        }
+
+                    }
+
+                    foreach (var dv in ten_DVlist)
+                    {
+
+                        foreach (var qndv in tt_QN_DV)
+                        {
+
+                            if (item.MaQuanNhan == qndv.MaQuanNhan && qndv.MaDonVi == dv.MaDonVi)
+                            {
+                                history.TenDonVi = dv.TenDonVi;
+                                break;
+
+                            }
+                        }
+
+                    }
+
+
+
+
+
+                    var tt_QUANNHAN = _context.QuanNhans.Find(item.MaQuanNhan);
+                    history.HoTen = tt_QUANNHAN.HoTen;
+                    history.CapBac = tt_QUANNHAN.CapBac;
+                    history.MaLs = "trust";
+                    history.MaQuanNhan = item.MaQuanNhan;
+                    history.LyDo = item.LyDo;
+                    history.NgayVang = item.NgayVang;
+                    history.NgayDuyet = DateTime.Now;
+                    history.NguoiDuyet = ten_nguoi_dangnhap.HoTen;
+                    _context.LsQsVangs.Add(history);
+                    _context.SaveChanges();
+
+                    _context.BaoCaoQsNgays.Remove(item);
+                    _context.SaveChanges();
+
+                }
+
+
+            }
+
+            return RedirectToAction("linkviewBaoCaod", "TieuDoan");
+        }
 
 
         /// <summary>
