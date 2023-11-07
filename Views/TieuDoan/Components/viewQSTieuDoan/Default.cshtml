@@ -5,8 +5,15 @@
     var donvi = ViewData["ttDonVi"] as List<QuannhanDonvi>;
     var chucvu = ViewData["ttChucVu"] as List<QuannhanChucvu>;
 
+    var numofpage = 10;
+
+    var numofgroup = ((Model.TotalItems / Model.PageSize) + 1) / numofpage ;
+
+    
+
     // trang nay de cho viewQSDonVi
 }
+
 
 
 
@@ -103,13 +110,55 @@
                 </tbody>
             </table>
 
+           
+
             <div class="pagination">
-                @for (int i = 1; i <= (Model.TotalItems / Model.PageSize) + 1; i++)
+                @if (Model.CurrentPage == ((Model.TotalItems / Model.PageSize) + 1)) { PagedViewModel<QuanNhan>.currencegroup = numofgroup; }
+              
+                
+
+                @if (((Model.TotalItems / Model.PageSize) + 1) < numofpage)
+                {
+                    for (int i = 1; i <= (Model.TotalItems / Model.PageSize) + 1; i++)
+                    {
+                        <a class="nav-link btn-secondary  " href="@Url.Action("viewTieuDoan", new { page = i })">@i</a>
+
+
+                    }
+
+
+
+                }
+                else
                 {
 
+                    if (PagedViewModel<QuanNhan>.currencegroup <= numofgroup && PagedViewModel<QuanNhan>.currencegroup >=0)
+                    {
+                        if (PagedViewModel<QuanNhan>.currencegroup!=0){
+                       <a class="nav-link btn-secondary  " href="/TieuDoan/changecurrencegroup/-1"> previous </a>  
+                        }
+                    for (int i = 1; i <= numofpage; i++)
+                    {
+                            if ((PagedViewModel<QuanNhan>.currencegroup * numofpage + i) <= ((Model.TotalItems / Model.PageSize) + 1)){
+                            <a class="nav-link btn-secondary  " href="@Url.Action("viewTieuDoan", new { page = (PagedViewModel<QuanNhan>.currencegroup*numofpage+i) })">@(PagedViewModel < QuanNhan > .currencegroup * numofpage + i)</a>
+                            }
 
-                    <a class="btn-navbar  nav-link " href="@Url.Action("viewTieuDoan", new { page = i })">@i</a>
+                    }
+
+                        if (PagedViewModel<QuanNhan>.currencegroup != numofgroup){
+                         <a class="nav-link btn-secondary  " href="/TieuDoan/changecurrencegroup/1" > next </a > 
+                        }
+                    }
+                    else if (PagedViewModel<QuanNhan>.currencegroup<0)
+
+
+                    { PagedViewModel<QuanNhan>.currencegroup = numofgroup; }
+
                 }
+               
+
+                <a class="nav-link btn-dark" href="@Url.Action("viewTieuDoan", new { page = (Model.TotalItems / Model.PageSize) + 1 })">  last(@((Model.TotalItems / Model.PageSize) + 1))   </a> <span class="text-danger nav-link">@Model.CurrentPage/@(Model.TotalItems / Model.PageSize + 1)</span>
+                 
             </div>
 
 

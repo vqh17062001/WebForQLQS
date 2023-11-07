@@ -120,7 +120,7 @@ namespace WebForQLQS.Controllers
 
             searchvalue = null;
             var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
-
+            PagedViewModel<QuanNhan>.currencegroup = 0;
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
             return RedirectToAction("viewTieuDoan", "TieuDoan");
 
@@ -768,7 +768,12 @@ namespace WebForQLQS.Controllers
 
         }
 
+        public IActionResult changecurrencegroup(int id) {
 
+            PagedViewModel<QuanNhan>.currencegroup= PagedViewModel<QuanNhan>.currencegroup+id;
+            return RedirectToAction("viewTieuDoan", "TieuDoan");
+
+        }
 
 
         [HttpPost]
