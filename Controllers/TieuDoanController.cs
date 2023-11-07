@@ -249,32 +249,63 @@ namespace WebForQLQS.Controllers
             ///
             int pageSize = 10;
             var objforanalystlist = new List<objforanalyst>();
-            var listLS=_context.LsQsVangs.ToList();
-            var listday= listLS.Select(x=>x.NgayVang).Distinct().OrderByDescending(x=>x).ToList();
+            var listLS = _context.LsQsVangs.ToList();
+            var listday = listLS.Select(x => x.NgayVang).Distinct().OrderByDescending(x => x).ToList();
 
-            foreach (var item in listday) {
+            foreach (var item in listday)
+            {
 
                 var recordobj = new objforanalyst(item);
                 objforanalystlist.Add(recordobj);
-            
+
             }
             var pagedItems = objforanalystlist.Skip((page - 1) * pageSize).Take(pageSize);
 
             var model = new PagedViewModel<objforanalyst>
             {
-                Items=pagedItems.ToList(),
-                TotalItems=objforanalystlist.Count,
+                Items = pagedItems.ToList(),
+                TotalItems = objforanalystlist.Count,
                 CurrentPage = page,
                 PageSize = pageSize
 
             };
+            /////////////////
+            ///  vung timf kiem
+            if (TempData["idsearch"] != null)
+            {
+
+                var x = DateTime.Parse(TempData["idsearch"] as string);
+                var recordobj1 = new objforanalyst(x);
+                objforanalystlist.Clear();
+                objforanalystlist.Add(recordobj1);
+
+                pagedItems = objforanalystlist.Skip((page - 1) * pageSize).Take(pageSize);
+
+                model = new PagedViewModel<objforanalyst>
+                {
+                    Items = pagedItems.ToList(),
+                    TotalItems = objforanalystlist.Count,
+                    CurrentPage = page,
+                    PageSize = pageSize
+
+                };
+            }
+
+            //List<objforanalyst> 
 
 
-            return View("ViewTieuDoan",model);
+            return View("ViewTieuDoan", model);
 
         }
 
+        public IActionResult detailforanalyst(DateTime? date) {
 
+
+
+            var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
+            ViewData["name"] = ten_nguoi_dangnhap.HoTen;
+            return View();
+        }
 
 
 
@@ -712,7 +743,8 @@ namespace WebForQLQS.Controllers
                     {
                         context.QuanNhans.Remove(recordToDelete);
                         context.SaveChanges();
-                    }catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         TempData["mess"] = "Quân nhân đang trong danh sách báo vắng!";
                         return RedirectToAction("viewTieuDoan", "TieuDoan");
@@ -768,9 +800,10 @@ namespace WebForQLQS.Controllers
 
         }
 
-        public IActionResult changecurrencegroup(int id) {
+        public IActionResult changecurrencegroup(int id)
+        {
 
-            PagedViewModel<QuanNhan>.currencegroup= PagedViewModel<QuanNhan>.currencegroup+id;
+            PagedViewModel<QuanNhan>.currencegroup = PagedViewModel<QuanNhan>.currencegroup + id;
             return RedirectToAction("viewTieuDoan", "TieuDoan");
 
         }
