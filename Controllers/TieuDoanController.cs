@@ -236,7 +236,7 @@ namespace WebForQLQS.Controllers
         /// <returns></returns>
 
 
-        public IActionResult linkviewForAnalystd()
+        public IActionResult linkviewForAnalystd(int page = 1)
         {
 
             datalinkmodel link = new datalinkmodel("viewForAnalystd");
@@ -245,9 +245,38 @@ namespace WebForQLQS.Controllers
             var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
 
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
-            return View("ViewTieuDoan");
+            ////////////////////////
+            ///
+            int pageSize = 10;
+            var objforanalystlist = new List<objforanalyst>();
+            var listLS=_context.LsQsVangs.ToList();
+            var listday= listLS.Select(x=>x.NgayVang).Distinct().OrderByDescending(x=>x).ToList();
+
+            foreach (var item in listday) {
+
+                var recordobj = new objforanalyst(item);
+                objforanalystlist.Add(recordobj);
+            
+            }
+            var pagedItems = objforanalystlist.Skip((page - 1) * pageSize).Take(pageSize);
+
+            var model = new PagedViewModel<objforanalyst>
+            {
+                Items=pagedItems.ToList(),
+                TotalItems=objforanalystlist.Count,
+                CurrentPage = page,
+                PageSize = pageSize
+
+            };
+
+
+            return View("ViewTieuDoan",model);
 
         }
+
+
+
+
 
         /// <summary>
         /// vùng cho XÁT NHẬN VẮNG 
@@ -535,7 +564,7 @@ namespace WebForQLQS.Controllers
 
 
             }
-            TempData["mess"] = $"Đã xát nhận vắng cho {record_to_history.Count} quân nhân!";
+            TempData["mess"] = $"Đã xát nhận vắng thành công cho {record_to_history.Count} quân nhân!";
             return RedirectToAction("linkviewBaoCaod", "TieuDoan");
         }
 
@@ -760,5 +789,14 @@ namespace WebForQLQS.Controllers
             TempData["idsearch"] = table_search;
             return RedirectToAction("linkviewBaoCaod", "TieuDoan");
         }
+
+        public IActionResult table_searchButtonClickinTHONGKE(string table_search)
+        {
+
+
+            TempData["idsearch"] = table_search;
+            return RedirectToAction("linkviewForAnalystd", "TieuDoan");
+        }
+
     }
 }
