@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "detailforanalyst";
 }
 
@@ -93,7 +92,98 @@
 
 
 @{
-
-
+    var date = ViewData["currencedate"] as string;
+    var listlydo = ViewData["lydo"] as List<LyDo>;
 }
+@model List<LsQsVang>;
+<div class="content-wrapper">
+    <!-- general form elements -->
+    <div class="card card-primary">
 
+        <!-- /.card -->
+        <!-- general form elements -->
+        <div class="card card-primary">
+            <div class="card-header">
+                <span> Thông tin quân số vắng ngày: @date </span>
+
+                <form method="post" action="table_searchButtonClickindetailforanalyst">
+
+                    <div class="input-group-append">
+                        <input type="text" style="width:205px" name="table_search" class="form-control float-right" placeholder="Nhập tên, đơn vị hoặc lý do">
+
+
+                        <button type="submit" class="btn btn-default">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <a class="btn-group btn btn-danger" href="/TieuDoan/linkviewForAnalystd"> Trở lại </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body" style="min-height: 500px;">
+
+                <table class="table table-striped">
+
+                    <h4 class="text-danger"> @ViewData["mess"] </h4>
+                    <thead>
+                        <tr>
+
+
+                            <th> HỌ TÊN  </th>
+                            <th> CẤP BẬC  </th>
+                            <th> CHỨC VỤ  </th>
+
+                            <th> ĐƠN VỊ  </th>
+                            <th> LÝ DO  </th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+
+
+
+                                <td>@item.HoTen</td>
+                                <td>@item.CapBac</td>
+                                <td>@item.ChucVu</td>
+                                <td>@item.TenDonVi</td>
+
+                                @foreach (var x in listlydo)
+                                {
+
+
+                                    if (item.LyDo == x.MaLd)
+                                    {
+                                        <td>@x.LoaiLd</td>
+                                    }
+
+                                }
+
+
+                            </tr>
+
+
+                        }
+
+
+                    </tbody>
+
+
+
+                </table>
+
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>

@@ -298,13 +298,32 @@ namespace WebForQLQS.Controllers
 
         }
 
-        public IActionResult detailforanalyst(DateTime? date) {
 
-
-
+        static DateTime? globledate;
+        public IActionResult detailforanalyst(DateTime? date)
+        {
+            if (date != null)
+            {
+                globledate = date;
+            }
             var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
-            return View();
+            ViewData["currencedate"] = globledate.Value.ToString("dd/MM/yyyy");
+            ////////
+            ///
+            var recordngay = _context.LsQsVangs.Where(x => x.NgayVang == globledate).ToList();
+
+            var lydo = _context.LyDos.ToList();
+
+
+            ViewData["lydo"] = lydo;
+
+
+            /////
+            ///
+           
+
+            return View(recordngay);
         }
 
 
@@ -836,5 +855,13 @@ namespace WebForQLQS.Controllers
             return RedirectToAction("linkviewForAnalystd", "TieuDoan");
         }
 
+
+        public IActionResult table_searchButtonClickindetailforanalyst(string table_search)
+        {
+
+            TempData["idsearch1"] = table_search;
+            return RedirectToAction("detailforanalyst", "TieuDoan");
+
+        }
     }
 }
