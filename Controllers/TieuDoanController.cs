@@ -298,20 +298,24 @@ namespace WebForQLQS.Controllers
 
         }
 
-
+        static string searchvalueindetailforanalyst;
         static DateTime? globledate;
-        public IActionResult detailforanalyst(DateTime? date)
+        public IActionResult detailforanalyst(DateTime? date, int page = 1)
         {
+            if (page == 1)
+            {
+                searchvalueindetailforanalyst = null;
+            }
             if (date != null)
             {
                 globledate = date;
             }
             var ten_nguoi_dangnhap = _context.QuanNhans.Find(idten);
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
-            ViewData["currencedate"] = globledate.Value.ToString("dd/MM/yyyy");
+            ViewData["currencedate"] = globledate;
             ////////
             ///
-            var recordngay = _context.LsQsVangs.Where(x => x.NgayVang == globledate).ToList();
+            var recordngaylist = _context.LsQsVangs.Where(x => x.NgayVang == globledate).ToList();
 
             var lydo = _context.LyDos.ToList();
 
@@ -321,9 +325,53 @@ namespace WebForQLQS.Controllers
 
             /////
             ///
-           
+            int pageSize = 10;
+            var pagedItems = recordngaylist.Skip((page - 1) * pageSize).Take(pageSize);
 
-            return View(recordngay);
+            var model = new PagedViewModel<LsQsVang>
+            {
+                Items = pagedItems.ToList(),
+                TotalItems = recordngaylist.Count,
+                CurrentPage = page,
+                PageSize = pageSize
+
+            };
+            //////
+            /// vung tim kiem
+            /// 
+            var item = TempData["idsearch"] as string;
+            if(item != null)
+            {
+                searchvalueindetailforanalyst = item;
+            }
+
+            if (searchvalueindetailforanalyst != null) {
+                List<LsQsVang> otherrecordLSlist = new List<LsQsVang>();
+                string searchlydo=null;
+                foreach (var y in lydo) {
+                    if (y.LoaiLd.Contains(searchvalueindetailforanalyst)) {
+
+                        searchlydo = y.MaLd;
+                    }
+                }
+
+
+                //searchvalueindetailforanalyst = item;
+                foreach (var x in recordngaylist) {
+                    if (x.HoTen.Contains(searchvalueindetailforanalyst) || x.TenDonVi.Contains(searchvalueindetailforanalyst)||x.LyDo==searchlydo) {
+
+                        otherrecordLSlist.Add(x);
+                    }
+                
+                }
+                pagedItems= otherrecordLSlist.Skip((page - 1) * pageSize).Take(pageSize);
+                model.Items = pagedItems.ToList();
+                model.TotalItems = otherrecordLSlist.Count;
+                model.CurrentPage = page;
+                model.PageSize = pageSize;
+            }
+
+            return View(model);
         }
 
 
@@ -859,7 +907,7 @@ namespace WebForQLQS.Controllers
         public IActionResult table_searchButtonClickindetailforanalyst(string table_search)
         {
 
-            TempData["idsearch1"] = table_search;
+            TempData["idsearch"] = table_search;
             return RedirectToAction("detailforanalyst", "TieuDoan");
 
         }

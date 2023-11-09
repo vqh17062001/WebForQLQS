@@ -92,10 +92,10 @@
 
 
 @{
-    var date = ViewData["currencedate"] as string;
+    var date = ViewData["currencedate"] ;
     var listlydo = ViewData["lydo"] as List<LyDo>;
 }
-@model List<LsQsVang>;
+@model PagedViewModel<WebForQLQS.Models.LsQsVang>;
 <div class="content-wrapper">
     <!-- general form elements -->
     <div class="card card-primary">
@@ -144,7 +144,7 @@
 
                     <tbody>
 
-                        @foreach (var item in Model)
+                        @foreach (var item in Model.Items)
                         {
                             <tr>
 
@@ -178,7 +178,14 @@
 
 
                 </table>
+                <div class="pagination">
+                    @for (int i = 1; i <= (Model.TotalItems / Model.PageSize) + 1; i++)
+                    {
 
+
+                        <a class="btn-navbar  nav-link " href="@Url.Action("detailforanalyst", new { date = date,  page = i })">@i</a>
+                    }
+                </div>
             </div>
 
 
