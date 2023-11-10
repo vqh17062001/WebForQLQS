@@ -46,7 +46,8 @@ namespace WebForQLQS.Controllers
             datalinkmodel link = new datalinkmodel("viewQSTieuDoan");
 
 
-
+            ///////////
+            ///
             var item = TempData["idsearch"] as string;
 
             if (item != null)
@@ -88,7 +89,8 @@ namespace WebForQLQS.Controllers
                 model.CurrentPage = page;
                 model.PageSize = pageSize;
             }
-
+            ///////////
+            ///
             ViewBag.linkmodel = link;
             if (TempData["name"] != null)
             {

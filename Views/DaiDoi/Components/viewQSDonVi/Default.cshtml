@@ -2,16 +2,22 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    var donvi = ViewData["ttDonVi"] as List<QuannhanDonvi>;
+    var chucvu = ViewData["ttChucVu"] as List<QuannhanChucvu>;
 
-    // trang nay de cho viewQSDonVi
+    var numofpage = 10;
+
+    var numofgroup = ((Model.TotalItems / Model.PageSize) + 1) / numofpage;
+
+    // trang nay de cho viewQSDonVi C 
 }
-
+@model PagedViewModel<WebForQLQS.Models.QuanNhan>;
 <div class="content-wrapper" style="min-height: 1302.32px;">
 
     <section class="content">
 
         <div class="card-header">
-            <h3 class="card-title">Tiêu đề đơn vị (dùng biến để thay đổi)</h3>
+            <h3 class="card-title">TIỂU ĐOÀN 1 - @ViewData["donvi"]</h3>
 
             <div class="card-tools">
                 <div class="input-group input-group-sm" style="width: 200px;">
@@ -32,60 +38,131 @@
 
         <div class="card-body p-0">
             <table class="table table-striped"   >
+
+                <h4 class="text-danger"> @ViewData["mess"] </h4>
                 <thead>
                     <tr>
-                       
 
-                        <th style="width: 10px">STT</th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending"> HỌ TÊN </th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending"> CHỨC VỤ </th>
-                        <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Rendering engine: activate to sort column descending" aria-sort="ascending"> ĐƠN VỊ </th>
+                        <th style="width: 10px">MÃ QN</th>
+                        <th style="width: 290px"> HỌ TÊN </th>
+                        <th style="width: 100px"> CHỨC VỤ </th>
+                        <th style="width: 100px"> ĐƠN VỊ </th>
 
-                        <th style="width: 150px"></th>
-                        <th style="width: 40px"></th>
-                        <th style="width: 40px"></th>
+                        <th style="width: 130px"> <div style="color:lightgreen" id="real-time-clock"></div> </th>
+                        <th style="width: 40px">Trang </th>
+                        <th style="width: 40px"> @Model.CurrentPage/@(Model.TotalItems / Model.PageSize + 1)</th>
 
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>num</td>
-                        <td>Full name 1</td>
-                        <td>chuc vụ </td>
-                        <td>rank</td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="baovang" >Báo vắng</button></td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="modify" >sửa</button></td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="delete"  style=" background-color:red" >xóa</button></td>
-                    </tr>
-                    
-                    <tr>
-                        <td>num</td>
-                        <td>Full name 1</td>
-                        <td>chuc vụ </td>
-                        <td>rank</td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="baovang">Báo vắng</button></td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="modify">sửa</button></td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="delete" style=" background-color:red">xóa</button></td>
-                    </tr>
+                    @foreach (var quannhan in Model.Items)
+                    {
+                        <tr>
+                            <td>@quannhan.MaQuanNhan</td>
+                            <td>@quannhan.HoTen</td>
+
+                            @foreach (var item in chucvu)
+                            {
+                                if (item.MaQuanNhan == quannhan.MaQuanNhan)
+                                {
+                                    <td>@item.MaChucVu</td>
+                                }
+
+                            }
 
 
-                    <tr>
-                        <td>num</td>
-                        <td>Full name 1</td>
-                        <td>chuc vụ </td>
-                        <td>rank</td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="baovang">Báo vắng</button></td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="modify">sửa</button></td>
-                        <td><button type="button" class="btn btn-block btn-primary" asp-action="delete" style=" background-color:red">xóa</button></td>
-                    </tr>
+                            @foreach (var item in donvi)
+                            {
+                                if (item.MaQuanNhan == quannhan.MaQuanNhan)
+                                {
+                                    <td>@item.MaDonVi</td>
+                                }
 
+                            }
+                            <td><a class=" btn btn-primary" href="@Url.Action("BaovangQNd", new { id = quannhan.MaQuanNhan })">Báo vắng</a></td>
+                            <td><a class=" btn btn-primary" href="@Url.Action("ChangeQNd", new { id = quannhan.MaQuanNhan })">Sửa</a></td>
+                            <td><a class=" btn btn-danger" href="@Url.Action("DeleteQNd", new { id = quannhan.MaQuanNhan })">Xóa</a></td>
+                        </tr>
+                    }
 
                 </tbody>
             </table>
+
+
+            <div class="pagination">
+                @if (Model.CurrentPage == ((Model.TotalItems / Model.PageSize) + 1)) { PagedViewModel<QuanNhan>.currencegroup = numofgroup; }
+
+
+
+                @if (((Model.TotalItems / Model.PageSize) + 1) < numofpage)
+                {
+                    for (int i = 1; i <= (Model.TotalItems / Model.PageSize) + 1; i++)
+                    {
+                        <a class="nav-link btn-secondary  " href="@Url.Action("ViewDaiDoi", new { page = i })">@i</a>
+
+
+                    }
+
+
+
+                }
+                else
+                {
+
+                    if (PagedViewModel<QuanNhan>.currencegroup <= numofgroup && PagedViewModel<QuanNhan>.currencegroup >= 0)
+                    {
+                        if (PagedViewModel<QuanNhan>.currencegroup != 0)
+                        {
+                            <a class="nav-link btn-secondary  " href="/TieuDoan/changecurrencegroup/-1"> previous </a>
+                        }
+                        for (int i = 1; i <= numofpage; i++)
+                        {
+                            if ((PagedViewModel<QuanNhan>.currencegroup * numofpage + i) <= ((Model.TotalItems / Model.PageSize) + 1))
+                            {
+                                <a class="nav-link btn-secondary  " href="@Url.Action("ViewDaiDoi", new { page = (PagedViewModel<QuanNhan>.currencegroup*numofpage+i) })">@(PagedViewModel<QuanNhan>.currencegroup * numofpage + i)</a>
+                            }
+
+                        }
+
+                        if (PagedViewModel<QuanNhan>.currencegroup != numofgroup)
+                        {
+                            <a class="nav-link btn-secondary  " href="/TieuDoan/changecurrencegroup/1"> next </a>
+                        }
+                    }
+                    else if (PagedViewModel<QuanNhan>.currencegroup < 0)
+
+
+                    { PagedViewModel<QuanNhan>.currencegroup = numofgroup; }
+
+                }
+
+
+                <a class="nav-link btn-dark" href="@Url.Action("ViewDaiDoi", new { page = (Model.TotalItems / Model.PageSize) + 1 })">  last(@((Model.TotalItems / Model.PageSize) + 1))   </a> <span class="text-danger nav-link">@Model.CurrentPage/@(Model.TotalItems / Model.PageSize + 1)</span>
+
+            </div>
+
+
         </div>
         <!-- /.card-body -->
 
 
     </section>
 </div>
+
+
+
+<script type="text/javascript">
+    function updateClock() {
+        var now = new Date();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+        var seconds = now.getSeconds();
+        var timeString = hours + ':' + (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+        document.getElementById('real-time-clock').innerHTML = timeString;
+    }
+
+    // Cập nhật đồng hồ mỗi giây
+    setInterval(updateClock, 1000);
+</script>
+
 
