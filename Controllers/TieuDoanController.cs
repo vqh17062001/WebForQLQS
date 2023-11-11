@@ -821,7 +821,7 @@ namespace WebForQLQS.Controllers
                 }
             }
 
-
+            TempData["mess"] = "Xóa thành công! ";
             // var quannhan = _context.QuanNhans.ExecuteDelete(id);
             return RedirectToAction("viewTieuDoan", "TieuDoan");
 

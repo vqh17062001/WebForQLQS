@@ -7,7 +7,7 @@
 
     var numofpage = 10;
 
-    var numofgroup = ((Model.TotalItems / Model.PageSize) + 1) / numofpage;
+     var numofgroup = ((Model.TotalItems / Model.PageSize) + 1) / numofpage;
 
     // trang nay de cho viewQSDonVi C 
 }
@@ -17,17 +17,28 @@
     <section class="content">
 
         <div class="card-header">
-            <h3 class="card-title">TIỂU ĐOÀN 1 - @ViewData["donvi"]</h3>
+            <h3 class="card-title">HỌC VIỆN KĨ THUẬT QUÂN SỰ - TIỂU ĐOÀN 1 - @ViewData["donvi"] - @Model.TotalItems Quân nhân</h3>
 
-            <div class="card-tools">
-                <div class="input-group input-group-sm" style="width: 200px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Nhập tên quân nhân">
+            <div class="card-tools" style="width: 250px">
+                <div class="input-group input-group-sm" style="width: 300px;">
 
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-default">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
+                    <form method="post" action="table_searchButtonClick">
+
+                        <div class="input-group-append">
+                            <input type="text" name="table_search" id="table_search" class="form-control float-right" placeholder="tên hoặc cấp bậc ">
+
+
+
+
+                            <button class="btn btn-default" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+
+
+
+                        </div>
+
+                    </form>
                 </div>
             </div>
         </div>
