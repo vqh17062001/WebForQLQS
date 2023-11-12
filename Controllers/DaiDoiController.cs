@@ -180,7 +180,10 @@ namespace WebForQLQS.Controllers
 
         }
 
-
+        /// <summary>
+        ///  vung cho THEM
+        /// </summary>
+        /// <returns></returns>
         public IActionResult linkviewAddInf()
         {
 
@@ -190,10 +193,106 @@ namespace WebForQLQS.Controllers
             var ten_nguoi_dangnhap = _context.QuanNhans.Find(idtenindaidoi);
 
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
+
+             ViewData["TT_ChuVu"] = _context.ChucVus.ToList();
+            ViewData["TT_DonVi"] = _context.DonVis.ToList();
+            ViewData["TT_LoaiQN"] = _context.LoaiQuanNhans.ToList();
+            ViewData["currencedonvi"]=_context.QuannhanDonvis.Where(x=>x.MaQuanNhan==idtenindaidoi).FirstOrDefault();
             return View("ViewDaiDoi");
 
         }
 
+
+        public IActionResult AddQNd_buton_click(string input_tenQN, string input_capbac, string select_chucvu, string select_donvi, string select_loaiQN)
+        {
+
+            if (input_tenQN != null)
+            {
+
+                var recordtoaddQUANNHAN = new QuanNhan()
+                {
+                    MaQuanNhan = "trust",
+                    HoTen = input_tenQN,
+                    CapBac = input_capbac,
+                    LoaiQn = select_loaiQN,
+
+                };
+                _context.QuanNhans.Add(recordtoaddQUANNHAN);
+                _context.SaveChanges();
+
+
+                string maQN = null;
+
+                var temp = _context.QuannhanDonvis.ToList();
+                var temp2 = _context.QuanNhans.ToList();
+
+                foreach (var d in temp2)
+                {
+                    foreach (var c in temp)
+                    {
+                        if (d.MaQuanNhan == c.MaQuanNhan)
+                        {
+                            maQN = null;
+                            continue;
+                        }
+                        else { maQN = d.MaQuanNhan; }
+                    }
+                }
+
+
+
+
+
+
+                var maQN_moithem = _context.QuanNhans.Find(maQN);
+
+
+                var recordtoaddQN_CV = new QuannhanChucvu()
+                {
+                    MaQuanNhan = maQN_moithem.MaQuanNhan,
+                    MaChucVu = select_chucvu,
+                    NgayBatDau = DateTime.Now
+
+                };
+
+                _context.QuannhanChucvus.Add(recordtoaddQN_CV);
+                _context.SaveChanges();
+
+                var recordtoaddQN_DV = new QuannhanDonvi()
+                {
+                    MaQuanNhan = maQN_moithem.MaQuanNhan,
+                    MaDonVi = select_donvi,
+
+                    NgayBatDau = DateTime.Now
+                };
+
+                _context.QuannhanDonvis.Add(recordtoaddQN_DV);
+                _context.SaveChanges();
+                TempData["mess"] = $"Đã thêm quân nhân {input_tenQN} thành công!";
+                return RedirectToAction("ViewDaiDoi", "DaiDoi");
+            }
+            else
+            {
+                TempData["mess"] = "Thêm thông tin thất bại!";
+                return RedirectToAction("ViewDaiDoi", "DaiDoi");
+
+
+            }
+
+
+
+
+        }
+
+
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
 
 
         public IActionResult linkviewForAnalyst()
@@ -209,29 +308,241 @@ namespace WebForQLQS.Controllers
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
 
-
-        public IActionResult linkviewBaoCao()
+        public IActionResult linkviewBaoCao( int page =1 )
         {
 
             datalinkmodel link = new datalinkmodel("viewBaoCao");
 
             ViewBag.linkmodel = link;
             var ten_nguoi_dangnhap = _context.QuanNhans.Find(idtenindaidoi);
-
+            var donvi =_context.QuannhanDonvis.Where(x=>x.MaQuanNhan==idtenindaidoi).FirstOrDefault();
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
-            return View("ViewDaiDoi");
+            /////
+            ///
+
+            //////////////  vùng đưa thông tin 
+            ///
+
+            int pageSize = 10;
+
+            var baocaoqsngaylist = _context.BaoCaoQsNgays.Where(x=>x.MaBc.Contains(donvi.MaDonVi)).ToList();
+
+            var pagedItems = baocaoqsngaylist.Skip((page - 1) * pageSize).Take(pageSize);
+
+            var model = new PagedViewModel<BaoCaoQsNgay>
+            {
+                Items = pagedItems.ToList(),
+                TotalItems = baocaoqsngaylist.Count,
+                CurrentPage = page,
+                PageSize = pageSize
+
+            };
+            ////////// vung xử lý tiềm kiếm 
+            ///
+            var item = TempData["idsearch"] as string;
+            if (item != null)
+            {
+                searchvalueindaidoi = item;
+
+                var quannhanlist = _context.QuanNhans.ToList();
+                foreach (var qn in quannhanlist)
+                {
+                    if (qn.HoTen.Contains(searchvalueindaidoi))
+                    {
+
+                        searchvalueindaidoi = qn.MaQuanNhan; break;
+                    }
+
+                }
+
+
+            }
+            if (item == "all" || item == "tất cả")
+            {
+                searchvalueindaidoi = null;
+
+            }
+
+
+            List<BaoCaoQsNgay> pageitemsearch = new List<BaoCaoQsNgay>();
+
+            if (searchvalueindaidoi != null)
+            {
+
+                foreach (var bc in baocaoqsngaylist)
+                {
+
+                    if (bc.MaBc.Contains(searchvalueindaidoi) || bc.MaQuanNhan == searchvalueindaidoi)
+                    {
+
+                        pageitemsearch.Add(bc);
+
+                    }
+
+
+
+                }
+
+
+                pagedItems = pageitemsearch.Skip((page - 1) * pageSize).Take(pageSize);
+
+                model.Items = pagedItems.ToList();
+                model.TotalItems = pageitemsearch.Count;
+                model.CurrentPage = page;
+                model.PageSize = pageSize;
+
+
+
+            }
+            ////////// 
+            ///
+
+            ViewData["TT_ChucVU"] = _context.QuannhanChucvus.ToList();
+            ViewData["TT_DonVi"] = _context.QuannhanDonvis.ToList();
+            ViewData["TT_QuanNhan"] = _context.QuanNhans.ToList();
+            ViewData["TT_Lydo"] = _context.LyDos.ToList();
+            ViewData["mess"] = TempData["mess"];
+
+            return View("ViewDaiDoi", model);
+
+
+
+
+
+
+           
+
+        }
+
+        public IActionResult DeleteRecordBaoCao(string id)
+        {
+
+            var recordtodelete = _context.BaoCaoQsNgays.Find(id);
+            if (recordtodelete != null)
+            {
+                _context.BaoCaoQsNgays.Remove(recordtodelete);
+                _context.SaveChanges();
+            }
+
+
+            return RedirectToAction("linkviewBaoCao", "DaiDoi");
 
         }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="table_search"></param>
-        /// <returns></returns>
+        public IActionResult detailRecordBaoCao(string id)
+        {
 
-        public IActionResult DeleteQNd(string id)
+            var ten_nguoi_dangnhap = _context.QuanNhans.Find(idtenindaidoi);
+
+            ViewData["name"] = ten_nguoi_dangnhap.HoTen;
+
+            var ttrecordvang = _context.BaoCaoQsNgays.Find(id);
+
+            var ttQuanNhan = _context.QuanNhans.ToList();
+            //////// ho ten
+            foreach (var qn in ttQuanNhan)
+            {
+
+                if (qn.MaQuanNhan == ttrecordvang.MaQuanNhan)
+                {
+                    ViewData["tenquannhan"] = qn.HoTen;
+                }
+            }
+            ///////  cap bac
+            foreach (var qn in ttQuanNhan)
+            {
+
+                if (qn.MaQuanNhan == ttrecordvang.MaQuanNhan)
+                {
+                    ViewData["capbacquannhan"] = qn.CapBac;
+                }
+            }
+            ///////  chuc vu
+
+            var listQN_CV = _context.QuannhanChucvus.ToList();
+
+            foreach (var qncv in listQN_CV)
+            {
+
+                if (qncv.MaQuanNhan == ttrecordvang.MaQuanNhan)
+                {
+
+                    var chucvu = _context.ChucVus.Find(qncv.MaChucVu);
+                    ViewData["tenchucvu"] = chucvu.TenChucVu;
+
+                }
+
+            }
+
+            ///////  don vi
+
+            var listQN_DV = _context.QuannhanDonvis.ToList();
+
+            foreach (var qndv in listQN_DV)
+            {
+
+                if (qndv.MaQuanNhan == ttrecordvang.MaQuanNhan)
+                {
+
+                    var donvi = _context.DonVis.Find(qndv.MaDonVi);
+                    ViewData["tendonvi"] = donvi.TenDonVi;
+
+                }
+
+            }
+
+
+            ///////  nguoi bao
+            foreach (var qn in ttQuanNhan)
+            {
+
+                if (qn.MaQuanNhan == ttrecordvang.NguoiDuyet)
+                {
+                    ViewData["tennguoiduyet"] = qn.HoTen;
+                }
+            }
+            /////// ly do
+
+            ViewData["lydo"] = _context.LyDos.ToList();
+
+            ///////
+            ///
+            ViewData["ngayvang"] = ttrecordvang.NgayVang;
+            ViewData["maBC"] = ttrecordvang;
+            return View();
+        }
+
+
+
+        public IActionResult ThemchitietBaoCao(string id, string select_lydo, string textarea_chitiet)
+        {
+
+            var record = _context.BaoCaoQsNgays.Find(id);
+            if (record != null && select_lydo != null)
+            {
+                record.LyDo = select_lydo;
+                record.ChiTiet = textarea_chitiet;
+                _context.SaveChanges();
+                TempData["mess"] = "Thêm chi tiết thành công!";
+                return RedirectToAction("linkviewBaoCao", "DaiDoi");
+            }
+            return RedirectToAction("linkviewBaoCao", "DaiDoi");
+
+        }
+
+            /// <summary>
+            ///  vung cho DANH SACH QUAN NHAN DAO DOI
+            /// </summary>
+            /// <param name="table_search"></param>
+            /// <returns></returns>
+
+            public IActionResult DeleteQNd(string id)
         {
 
             using (var context = new HtqlqsContext()) // Thay YourDbContext bằng tên của DbContext của bạn
@@ -464,6 +775,12 @@ namespace WebForQLQS.Controllers
             return RedirectToAction("ViewDaiDoi", "DaiDoi");
         }
 
+        public IActionResult table_searchButtonClickinXATNHANVANG(string table_search)
+        {
 
+
+            TempData["idsearch"] = table_search;
+            return RedirectToAction("linkviewBaoCao", "DaiDoi");
+        }
     }
 }

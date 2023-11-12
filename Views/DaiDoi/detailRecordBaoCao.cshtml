@@ -1,0 +1,203 @@
+﻿@{
+    ViewData["Title"] = "detailRecordBaoCao";
+}
+
+<aside class="main-sidebar sidebar-dark-primary ">
+
+
+
+    <a href="/TieuDoan/linkviewQSDonVid" class="brand-link">
+        <img src="../../frontend/dist/img/logo.jpg" style="opacity: 1;block-size:47px "> <br />
+        <span class="brand-text font-weight-light">HỆ THỐNG QUẢN LÝ QUÂN SỐ</span>
+    </a>
+
+
+
+
+    <div class="sidebar">
+        <!-- Sidebar user (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+
+            <div class="info">
+                <span class="brand-text font-weight-light" style="color:green "> Phiên đăng nhập của </span>
+                <div style="color:green">
+                    <span style="font-size: 25px">@ViewData["name"]</span>    <!-- thay thế bằng tên người đăng nhập  -->
+
+                    <a class="btn  btn-danger" href="/Home/Login " style="width: 100px">ĐĂNG XUẤT </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- SidebarSearch Form -->
+    <!-- Sidebar Menu -->
+
+
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+
+        <li class="nav-item">
+            <button>
+                <a class="btn btn-block btn-dark">
+
+                    DANH SÁCH QUÂN NHÂN TIỂU ĐOÀN
+
+                </a>
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <button style=" width: 250px ">
+                <a class="btn btn-block btn-dark ">
+
+
+                    THÊM
+                    </p>
+                </a>
+            </button>
+        </li>
+
+
+        <li class="nav-item">
+
+            <button style=" width: 250px ">
+                <a class="btn btn-block btn-dark">
+
+                    <p>
+                        THỐNG KÊ
+                    </p>
+                </a>
+            </button>
+        </li>
+
+        <li class="nav-item">
+
+            <button style=" width: 250px ">
+                <a class="btn btn-block btn-dark">
+
+                    <p>
+                        XÁC NHẬN VẮNG
+                    </p>
+                </a>
+            </button>
+
+        </li>
+        <!-- /.sidebar-menu -->
+
+
+
+    </ul>
+
+</aside>
+
+@{
+    var hoten = ViewData["tenquannhan"] as string;
+
+    var capbac = ViewData["capbacquannhan"] as string;
+
+    var chucvu = ViewData["tenchucvu"] as string;
+
+    var donvi = ViewData["tendonvi"] as string;
+
+    var nguoibao = ViewData["tennguoiduyet"] as string;
+
+    var lydo = ViewData["lydo"] as List<LyDo>;
+
+    var ngayvang = ViewData["ngayvang"];
+
+    var bc = ViewData["maBC"] as BaoCaoQsNgay;
+}
+
+
+
+
+<div class="content-wrapper">
+    <!-- general form elements -->
+    <div class="card card-primary">
+
+        <!-- /.card -->
+        <!-- general form elements -->
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">Thông tin quân nhân</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="exampleInputBorder">Họ tên: <span style="color:crimson">@hoten</span></label>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="exampleSelectBorder"> Cấp bậc: <span style="color:crimson">@capbac</code></label>
+                </div>
+                <div class="form-group">
+                    <label for="exampleSelectBorderWidth2">Chức vụ: <span style="color:crimson">@chucvu</span></label>
+
+                </div>
+                <div class="form-group">
+                    <label for="exampleSelectRounded0">Đơn vị: <span style="color:crimson">@donvi</span></label>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleSelectRounded0">Người báo vắng: <span style="color:crimson">@nguoibao</span></label>
+
+                </div>
+
+                <div>
+                    <label for="exampleSelectRounded0">Ngày vắng: <span style="color:lightgreen">@ngayvang</span></label>
+
+
+                </div>
+
+            </div>
+
+            <div style="position: absolute; margin-left:400px; margin-top:65px">
+                <form method="post" action="/DaiDoi/ThemchitietBaoCao/@bc.MaBc">
+                <label>
+                    Lý do
+                    <span>
+                        <select class="form-control" name="select_lydo" id="select_lydo">
+
+                                @if (bc.LyDo == null)
+                                {
+                                    <option value=@null>---Nhập lý do--- </option>    
+                                }
+                                @foreach (var item in lydo)
+                            {
+                                if (bc.LyDo == item.MaLd)
+                                {
+
+                                    <option value=@item.MaLd>@item.LoaiLd</option>
+                                    lydo.Remove(item);
+                                    break;
+                                }
+
+
+                            }
+
+                            @foreach (var item1 in lydo)
+                            {
+                                <option value=@item1.MaLd>@item1.LoaiLd</option>
+
+                            }
+
+                        </select>
+                    </span>
+                </label><br />
+
+                <label>Chi tiết</label>
+                    <textarea name="textarea_chitiet" id="textarea_chitiet" value="@bc.ChiTiet" type="text" style="width:450px;border:revert" class="form-control form-control-border" rows="4"> @bc.ChiTiet </textarea>
+
+                <button class=" btn btn-primary" type="submit">Thêm chi tiết </button>
+                <a class=" btn btn-danger" href="@Url.Action("linkviewBaoCao")">Trở lại</a>
+
+                </form>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
