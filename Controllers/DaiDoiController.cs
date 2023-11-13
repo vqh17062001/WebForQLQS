@@ -295,7 +295,7 @@ namespace WebForQLQS.Controllers
         /// <returns></returns>
 
 
-        public IActionResult linkviewForAnalyst()
+        public IActionResult linkviewForAnalyst(int page = 1)
         {
 
             datalinkmodel link = new datalinkmodel("viewForAnalyst");
@@ -304,12 +304,95 @@ namespace WebForQLQS.Controllers
             var ten_nguoi_dangnhap = _context.QuanNhans.Find(idtenindaidoi);
 
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
-            return View("ViewDaiDoi");
+
+
+            ////////
+            ///
+
+            string madonvi = null;
+            var qn_dvlist = _context.QuannhanDonvis.ToList();
+            foreach (var qndv in qn_dvlist)
+            {
+                if (qndv.MaQuanNhan == idtenindaidoi)
+                {
+                    madonvi = qndv.MaDonVi;
+                    break;
+                }
+
+            }
+
+
+            //////
+
+            int pageSize = 10;
+            var objforanalystlist = new List<objforanalyst>();
+            var listLS = _context.LsQsVangs.ToList();
+            var listday = listLS.Select(x => x.NgayVang).Distinct().OrderByDescending(x => x).ToList();
+
+            foreach (var item in listday)
+            {
+
+                var recordobj = new objforanalyst(item,madonvi);
+                objforanalystlist.Add(recordobj);
+
+            }
+            var pagedItems = objforanalystlist.Skip((page - 1) * pageSize).Take(pageSize);
+
+            var model = new PagedViewModel<objforanalyst>
+            {
+                Items = pagedItems.ToList(),
+                TotalItems = objforanalystlist.Count,
+                CurrentPage = page,
+                PageSize = pageSize
+
+            };
+            /////////////////
+            ///  vung timf kiem
+            if (TempData["idsearchday"] != null)
+            {
+                DateTime x;
+                try
+                {
+                     x = DateTime.Parse(TempData["idsearchday"] as string);
+                }
+                catch {
+                    TempData["idsearchday"] = null;
+                    TempData["mess"] = "Ngày không hợp lệ!";
+                    return RedirectToAction("linkviewForAnalyst", "DaiDoi");
+                } 
+
+                var recordobj1 = new objforanalyst(x, madonvi);
+                objforanalystlist.Clear();
+                objforanalystlist.Add(recordobj1);
+
+                pagedItems = objforanalystlist.Skip((page - 1) * pageSize).Take(pageSize);
+
+                model = new PagedViewModel<objforanalyst>
+                {
+                    Items = pagedItems.ToList(),
+                    TotalItems = objforanalystlist.Count,
+                    CurrentPage = page,
+                    PageSize = pageSize
+
+                };
+            }
+
+            //List<objforanalyst> 
+            ViewData["mess"] = TempData["mess"];
+            ViewData["phienhieu"] = madonvi;
+            return View("ViewDaiDoi", model);
+
+
+
+
+
+           
 
         }
 
         /// <summary>
-        /// 
+        /// vungf cho baos vawngs
+        ///
         /// </summary>
         /// <returns></returns>
 
@@ -782,5 +865,14 @@ namespace WebForQLQS.Controllers
             TempData["idsearch"] = table_search;
             return RedirectToAction("linkviewBaoCao", "DaiDoi");
         }
+
+        public IActionResult table_searchButtonClickinTHONGKE(string table_search)
+        {
+
+
+            TempData["idsearchday"] = table_search;
+            return RedirectToAction("linkviewForAnalyst", "DaiDoi");
+        }
+
     }
 }
