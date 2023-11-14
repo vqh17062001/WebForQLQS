@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using WebForQLQS.Data;
 using WebForQLQS.Models;
@@ -389,6 +390,95 @@ namespace WebForQLQS.Controllers
            
 
         }
+
+
+        static string searchvalueindetailforanalyst;
+        static DateTime? globledate;
+        public IActionResult detailforanalyst(DateTime? date, int page = 1)
+        {
+            if (page == 1)
+            {
+                searchvalueindetailforanalyst = null;
+            }
+            if (date != null)
+            {
+                globledate = date;
+            }
+            var ten_nguoi_dangnhap = _context.QuanNhans.Find(idtenindaidoi);
+
+            //string sqlcomand = $"select top(1) Ten_don_vi from DON_VI, QUANNHAN_DONVI where DON_VI.Ma_Don_vi=QUANNHAN_DONVI.Ma_Don_vi and QUANNHAN_DONVI.Ma_Quan_nhan='{ten_nguoi_dangnhap.MaQuanNhan}'";
+
+            string madonvi = _context.QuannhanDonvis.Where(x => x.MaQuanNhan == ten_nguoi_dangnhap.MaQuanNhan).FirstOrDefault()?.MaDonVi;
+            string tendonvi = _context.DonVis.Where(x => x.MaDonVi == madonvi).FirstOrDefault()?.TenDonVi;
+
+            ViewData["name"] = ten_nguoi_dangnhap.HoTen;
+            ViewData["currencedate"] = globledate;
+            ////////
+            ///
+            var recordngaylist = _context.LsQsVangs.Where(x => x.NgayVang == globledate).Where(x=>x.TenDonVi==tendonvi).ToList();
+
+            var lydo = _context.LyDos.ToList();
+
+
+            ViewData["lydo"] = lydo;
+
+
+            /////
+            ///
+            int pageSize = 10;
+            var pagedItems = recordngaylist.Skip((page - 1) * pageSize).Take(pageSize);
+
+            var model = new PagedViewModel<LsQsVang>
+            {
+                Items = pagedItems.ToList(),
+                TotalItems = recordngaylist.Count,
+                CurrentPage = page,
+                PageSize = pageSize
+
+            };
+            //////
+            /// vung tim kiem
+            /// 
+            var item = TempData["idsearch"] as string;
+            if (item != null)
+            {
+                searchvalueindetailforanalyst = item;
+            }
+
+            if (searchvalueindetailforanalyst != null)
+            {
+                List<LsQsVang> otherrecordLSlist = new List<LsQsVang>();
+                string searchlydo = null;
+                foreach (var y in lydo)
+                {
+                    if (y.LoaiLd.Contains(searchvalueindetailforanalyst))
+                    {
+
+                        searchlydo = y.MaLd;
+                    }
+                }
+
+
+                //searchvalueindetailforanalyst = item;
+                foreach (var x in recordngaylist)
+                {
+                    if (x.HoTen.Contains(searchvalueindetailforanalyst) || x.TenDonVi.Contains(searchvalueindetailforanalyst) || x.LyDo == searchlydo)
+                    {
+
+                        otherrecordLSlist.Add(x);
+                    }
+
+                }
+                pagedItems = otherrecordLSlist.Skip((page - 1) * pageSize).Take(pageSize);
+                model.Items = pagedItems.ToList();
+                model.TotalItems = otherrecordLSlist.Count;
+                model.CurrentPage = page;
+                model.PageSize = pageSize;
+            }
+
+            return View(model);
+        }
+
 
         /// <summary>
         /// vungf cho baos vawngs
@@ -872,6 +962,14 @@ namespace WebForQLQS.Controllers
 
             TempData["idsearchday"] = table_search;
             return RedirectToAction("linkviewForAnalyst", "DaiDoi");
+        }
+
+        public IActionResult table_searchButtonClickindetailforanalyst(string table_search)
+        {
+
+            TempData["idsearch"] = table_search;
+            return RedirectToAction("detailforanalyst", "DaiDoi");
+
         }
 
     }
