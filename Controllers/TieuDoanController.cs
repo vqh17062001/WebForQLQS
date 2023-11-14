@@ -273,10 +273,20 @@ namespace WebForQLQS.Controllers
             };
             /////////////////
             ///  vung timf kiem
-            if (TempData["idsearch"] != null)
+            if (TempData["idsearchday"] != null)
             {
 
-                var x = DateTime.Parse(TempData["idsearch"] as string);
+                DateTime x;
+                try
+                {
+                    x = DateTime.Parse(TempData["idsearchday"] as string);
+                }
+                catch
+                {
+                    TempData["idsearchday"] = null;
+                    TempData["mess"] = "Ngày không hợp lệ!";
+                    return RedirectToAction("linkviewForAnalystd", "TieuDoan");
+                }
                 var recordobj1 = new objforanalyst(x);
                 objforanalystlist.Clear();
                 objforanalystlist.Add(recordobj1);
@@ -295,7 +305,7 @@ namespace WebForQLQS.Controllers
 
             //List<objforanalyst> 
 
-
+            ViewData["mess"] = TempData["mess"];
             return View("ViewTieuDoan", model);
 
         }
@@ -901,7 +911,7 @@ namespace WebForQLQS.Controllers
         {
 
 
-            TempData["idsearch"] = table_search;
+            TempData["idsearchday"] = table_search;
             return RedirectToAction("linkviewForAnalystd", "TieuDoan");
         }
 
