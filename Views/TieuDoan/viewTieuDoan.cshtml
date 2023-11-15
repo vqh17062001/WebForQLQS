@@ -39,62 +39,62 @@
     <!-- SidebarSearch Form -->
     <!-- Sidebar Menu -->
 
+    <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
+            <li class="nav-item">
 
-        <li class="nav-item">
-            <button>
-                <a href="../TieuDoan/linkviewQSDonVid" class="btn btn-block btn-primary">
-
-                    DANH SÁCH QUÂN NHÂN TIỂU ĐOÀN
-
+                <a href="../TieuDoan/linkviewQSDonVid" class="nav-link @ViewData["ativeinviewTieuDoan"]">
+                    <p>
+                        DANH SÁCH QUÂN NHÂN TIỂU ĐOÀN
+                    </p>
                 </a>
-            </button>
-        </li>
 
-        <li class="nav-item">
-            <button style=" width: 250px ">
-                <a href="../TieuDoan/linkviewAddInfd" class="btn btn-block btn-primary ">
+            </li>
+
+            <li class="nav-item">
+
+                <a href="../TieuDoan/linkviewAddInfd" class="nav-link @ViewData["ativeinlinkviewAddInfd"]">
                     <p>
 
                         THÊM
                     </p>
                 </a>
-            </button>
-        </li>
+
+            </li>
 
 
-        <li class="nav-item">
+            <li class="nav-item" style="border:inset">
 
-            <button style=" width: 250px ">
-                <a href="../TieuDoan/linkviewForAnalystd" class="btn btn-block btn-primary">
 
+                <a href="../TieuDoan/linkviewForAnalystd"  class="nav-link @ViewData["ativeinlinkviewForAnalystd"]">
+                    <i class="nav-icon fas fa-chart-pie"></i>
                     <p>
                         THỐNG KÊ
                     </p>
                 </a>
-            </button>
-        </li>
 
-        <li class="nav-item">
+            </li>
 
-            <button style=" width: 250px ">
-                <a href="../TieuDoan/linkviewBaoCaod" class="btn btn-block btn-primary">
+            <li class="nav-item">
+
+
+                <a href="../TieuDoan/linkviewBaoCaod" class="nav-link @ViewData["ativeinlinkviewBaoCaod"]">
 
                     <p>
                         XÁC NHẬN VẮNG
                     </p>
                 </a>
-            </button>
-
-        </li>
-        <!-- /.sidebar-menu -->
 
 
+            </li>
+            <!-- /.sidebar-menu -->
 
-    </ul>
 
+
+        </ul>
+    </nav>
 </aside>
 
 @{

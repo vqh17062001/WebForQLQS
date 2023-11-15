@@ -107,6 +107,7 @@ namespace WebForQLQS.Controllers
             ViewData["ttChucVu"] = qn_cvlist;
             ViewData["mess"] = TempData["mess"];
 
+            ViewData["ativeinviewTieuDoan"] = "active";
             return View(model);
 
         }
@@ -145,6 +146,8 @@ namespace WebForQLQS.Controllers
             ViewData["TT_ChuVu"] = _context.ChucVus.ToList();
             ViewData["TT_DonVi"] = _context.DonVis.ToList();
             ViewData["TT_LoaiQN"] = _context.LoaiQuanNhans.ToList();
+
+            ViewData["ativeinlinkviewAddInfd"] = "active";
             return View("ViewTieuDoan");
 
         }
@@ -306,6 +309,7 @@ namespace WebForQLQS.Controllers
             //List<objforanalyst> 
 
             ViewData["mess"] = TempData["mess"];
+            ViewData["ativeinlinkviewForAnalystd"] = "active";
             return View("ViewTieuDoan", model);
 
         }
@@ -485,6 +489,9 @@ namespace WebForQLQS.Controllers
             ViewData["TT_Lydo"] = _context.LyDos.ToList();
             ViewData["mess"] = TempData["mess"];
 
+
+
+            ViewData["ativeinlinkviewBaoCaod"] = "active";
             return View("ViewTieuDoan", model);
 
         }
