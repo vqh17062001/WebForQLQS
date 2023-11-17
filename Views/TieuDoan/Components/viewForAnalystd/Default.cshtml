@@ -47,7 +47,7 @@
                     </thead>
                     <tbody>
 
-                        @foreach(var item in Model.Items)
+                        @foreach (var item in Model.Items)
                         {
                             <tr>
 
@@ -55,20 +55,20 @@
                                 {
                                     <td>@item.Ngayvang.Value.ToString("dd/MM/yyyy") </td>
                                 }
-                                
+
                                 <td>@item.TongQS</td>
                                 <td>@item.QSvang</td>
                                 <td>@item.percentage %</td>
                                 <td><a class=" btn btn-primary" href="@Url.Action("detailforanalyst", new { date = item.Ngayvang })">Chi tiết</a></td>
 
-                            </tr> 
+                            </tr>
 
 
                         }
 
 
                     </tbody>
-                   
+
                 </table>
 
                 <div class="pagination">
@@ -87,4 +87,6 @@
     </section>
 
 </div>
+
+
 

@@ -152,7 +152,7 @@ namespace WebForQLQS.Controllers
 
 
 
-
+            ViewData["ativeinviewDaiDoi"] = "active";
             return View(model);
         }
 
@@ -199,6 +199,8 @@ namespace WebForQLQS.Controllers
             ViewData["TT_DonVi"] = _context.DonVis.ToList();
             ViewData["TT_LoaiQN"] = _context.LoaiQuanNhans.ToList();
             ViewData["currencedonvi"]=_context.QuannhanDonvis.Where(x=>x.MaQuanNhan==idtenindaidoi).FirstOrDefault();
+
+            ViewData["ativeinlinkviewAddInf"] = "active";
             return View("ViewDaiDoi");
 
         }
@@ -381,6 +383,10 @@ namespace WebForQLQS.Controllers
             //List<objforanalyst> 
             ViewData["mess"] = TempData["mess"];
             ViewData["phienhieu"] = madonvi;
+
+
+
+            ViewData["ativeinlinkviewForAnalyst"] = "active";
             return View("ViewDaiDoi", model);
 
 
@@ -581,6 +587,9 @@ namespace WebForQLQS.Controllers
             ViewData["TT_Lydo"] = _context.LyDos.ToList();
             ViewData["mess"] = TempData["mess"];
 
+
+
+            ViewData["ativeinlinkviewBaoCaod"] = "active";
             return View("ViewDaiDoi", model);
 
 
