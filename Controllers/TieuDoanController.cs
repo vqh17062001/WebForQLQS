@@ -822,7 +822,8 @@ namespace WebForQLQS.Controllers
             using (var context = new HtqlqsContext()) // Thay YourDbContext bằng tên của DbContext của bạn
             {
                 var recordToDelete = context.QuanNhans.Find(id);
-                if (recordToDelete != null)
+                var otherrecord = context.NguoiDungs.Where(x=>x.MaQuanNhan==id);
+                if (recordToDelete != null && otherrecord == null)
                 {
 
                     try
@@ -835,6 +836,12 @@ namespace WebForQLQS.Controllers
                         TempData["mess"] = "Quân nhân đang trong danh sách báo vắng!";
                         return RedirectToAction("viewTieuDoan", "TieuDoan");
                     }
+                }
+                else {
+
+                    TempData["mess"] = "Không được quyền xóa người dùng!";
+                    return RedirectToAction("viewTieuDoan", "TieuDoan");
+
                 }
             }
 

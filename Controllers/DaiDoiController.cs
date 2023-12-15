@@ -195,10 +195,10 @@ namespace WebForQLQS.Controllers
 
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
 
-             ViewData["TT_ChuVu"] = _context.ChucVus.ToList();
+            ViewData["TT_ChuVu"] = _context.ChucVus.ToList();
             ViewData["TT_DonVi"] = _context.DonVis.ToList();
             ViewData["TT_LoaiQN"] = _context.LoaiQuanNhans.ToList();
-            ViewData["currencedonvi"]=_context.QuannhanDonvis.Where(x=>x.MaQuanNhan==idtenindaidoi).FirstOrDefault();
+            ViewData["currencedonvi"] = _context.QuannhanDonvis.Where(x => x.MaQuanNhan == idtenindaidoi).FirstOrDefault();
 
             ViewData["ativeinlinkviewAddInf"] = "active";
             return View("ViewDaiDoi");
@@ -335,7 +335,7 @@ namespace WebForQLQS.Controllers
             foreach (var item in listday)
             {
 
-                var recordobj = new objforanalyst(item,madonvi);
+                var recordobj = new objforanalyst(item, madonvi);
                 objforanalystlist.Add(recordobj);
 
             }
@@ -356,13 +356,14 @@ namespace WebForQLQS.Controllers
                 DateTime x;
                 try
                 {
-                     x = DateTime.Parse(TempData["idsearchday"] as string);
+                    x = DateTime.Parse(TempData["idsearchday"] as string);
                 }
-                catch {
+                catch
+                {
                     TempData["idsearchday"] = null;
                     TempData["mess"] = "Ngày không hợp lệ!";
                     return RedirectToAction("linkviewForAnalyst", "DaiDoi");
-                } 
+                }
 
                 var recordobj1 = new objforanalyst(x, madonvi);
                 objforanalystlist.Clear();
@@ -393,7 +394,7 @@ namespace WebForQLQS.Controllers
 
 
 
-           
+
 
         }
 
@@ -421,7 +422,7 @@ namespace WebForQLQS.Controllers
             ViewData["currencedate"] = globledate;
             ////////
             ///
-            var recordngaylist = _context.LsQsVangs.Where(x => x.NgayVang == globledate).Where(x=>x.TenDonVi==tendonvi).ToList();
+            var recordngaylist = _context.LsQsVangs.Where(x => x.NgayVang == globledate).Where(x => x.TenDonVi == tendonvi).ToList();
 
             var lydo = _context.LyDos.ToList();
 
@@ -492,14 +493,14 @@ namespace WebForQLQS.Controllers
         /// </summary>
         /// <returns></returns>
 
-        public IActionResult linkviewBaoCao( int page =1 )
+        public IActionResult linkviewBaoCao(int page = 1)
         {
 
             datalinkmodel link = new datalinkmodel("viewBaoCao");
 
             ViewBag.linkmodel = link;
             var ten_nguoi_dangnhap = _context.QuanNhans.Find(idtenindaidoi);
-            var donvi =_context.QuannhanDonvis.Where(x=>x.MaQuanNhan==idtenindaidoi).FirstOrDefault();
+            var donvi = _context.QuannhanDonvis.Where(x => x.MaQuanNhan == idtenindaidoi).FirstOrDefault();
             ViewData["name"] = ten_nguoi_dangnhap.HoTen;
             /////
             ///
@@ -509,7 +510,7 @@ namespace WebForQLQS.Controllers
 
             int pageSize = 10;
 
-            var baocaoqsngaylist = _context.BaoCaoQsNgays.Where(x=>x.MaBc.Contains(donvi.MaDonVi)).ToList();
+            var baocaoqsngaylist = _context.BaoCaoQsNgays.Where(x => x.MaBc.Contains(donvi.MaDonVi)).ToList();
 
             var pagedItems = baocaoqsngaylist.Skip((page - 1) * pageSize).Take(pageSize);
 
@@ -597,7 +598,7 @@ namespace WebForQLQS.Controllers
 
 
 
-           
+
 
         }
 
@@ -718,19 +719,21 @@ namespace WebForQLQS.Controllers
 
         }
 
-            /// <summary>
-            ///  vung cho DANH SACH QUAN NHAN DAO DOI
-            /// </summary>
-            /// <param name="table_search"></param>
-            /// <returns></returns>
+        /// <summary>
+        ///  vung cho DANH SACH QUAN NHAN DAO DOI
+        /// </summary>
+        /// <param name="table_search"></param>
+        /// <returns></returns>
 
-            public IActionResult DeleteQNd(string id)
+        public IActionResult DeleteQNd(string id)
         {
 
             using (var context = new HtqlqsContext()) // Thay YourDbContext bằng tên của DbContext của bạn
             {
                 var recordToDelete = context.QuanNhans.Find(id);
-                if (recordToDelete != null)
+                var otherrecord = context.NguoiDungs.Where(x => x.MaQuanNhan == id);
+
+                if (recordToDelete != null && otherrecord == null)
                 {
 
                     try
@@ -744,6 +747,14 @@ namespace WebForQLQS.Controllers
                         return RedirectToAction("ViewDaiDoi", "DaiDoi");
 
                     }
+                }
+                else
+                {
+
+                    TempData["mess"] = "Không được quyền xóa người dùng!";
+                    return RedirectToAction("ViewDaiDoi", "DaiDoi");
+
+
                 }
             }
 
