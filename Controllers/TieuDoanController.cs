@@ -75,7 +75,7 @@ namespace WebForQLQS.Controllers
 
                     }
 
-                    if (qn.CapBac.Contains(searchvalue) || qn.HoTen.Contains(searchvalue))
+                    if (qn.HoTen.Contains(searchvalue)||qn.CapBac.Contains(searchvalue) )
                     {
                         pageitemsearch.Add(qn);
 
@@ -822,7 +822,7 @@ namespace WebForQLQS.Controllers
             using (var context = new HtqlqsContext()) // Thay YourDbContext bằng tên của DbContext của bạn
             {
                 var recordToDelete = context.QuanNhans.Find(id);
-                var otherrecord = context.NguoiDungs.Where(x=>x.MaQuanNhan==id);
+                var otherrecord = context.NguoiDungs.Where(x=>x.MaQuanNhan==id).FirstOrDefault();
                 if (recordToDelete != null && otherrecord == null)
                 {
 
